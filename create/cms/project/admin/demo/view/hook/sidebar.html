@@ -1,0 +1,33 @@
+<div class="sidebar">
+    <!-- Phần Đầu Sidebar -->
+    <div class="sidebar-header sidebar-fixed">
+        <button class="toggle-sidebar sidebar-fixed-left pseudo">☰</button>
+        <!-- Sử dụng một icon thay vì chữ "Toggle Sidebar" -->
+        <a href="#" class="spa new-post sidebar-fixed-mid" data-icon="✎">
+            New Post
+        </a>
+        <a href="#" class="spa notifications sidebar-fixed-right" data-count="10" data-icon="🔔"></a>
+    </div>
+
+    <!-- Phần Giữa Sidebar -->
+    <div class="sidebar-content">
+        {{ map(data("admin:sidebar:link"), (list, folder) => view("tpl/sidebar-list", {list, folder})) }}
+    </div>
+
+    <!-- Phần Cuối Sidebar -->
+    <div class="sidebar-footer sidebar-fixed">
+        <a href="#" class="spa sidebar-fixed-left">
+            <img src="avatar.jpg">
+        </a>
+        <a href="#" class="spa admin-name sidebar-fixed-mid">Admin Name</a>
+        <button class="sidebar-fixed-right pseudo">
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                stroke-linejoin="round" class="icon-sm flex-shrink-0 text-gray-500 gizmo:hidden" height="1em"
+                width="1em" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+        </button>
+    </div>
+</div>

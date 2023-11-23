@@ -1,0 +1,33 @@
+{
+	"plugins": {
+		"0": "yavi",
+		"1": "demo",
+		"2": "demo",
+		"plugin-demo": "demo"
+	},
+	"server": {
+		"host": "localhost",
+		"port": 80
+	},
+	"mongodb": {
+		"host": "127.0.0.1",
+		"port": 27017,
+		"database": "test",
+		"query": {
+			"directConnection": true,
+			"serverSelectionTimeoutMS": 2000,
+			"appName": "mongosh+1.10.6"
+		},
+		"options": {
+			"useNewUrlParser": true,
+			"useUnifiedTopology": true
+		}
+	},
+	"redis": {
+		"port": 6379,
+		"host": "127.0.0.1",
+		"db": 0
+	},
+	"websocket": true,
+	"dev": true
+}

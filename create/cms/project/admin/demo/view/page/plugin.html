@@ -1,0 +1,18 @@
+<form id="plugin-form">
+    <div>
+        <div>
+            <button id="submit-plugin">Lưu</button>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Plugin</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ map(data("admin:plugin"), (p) => view("tpl/plugin", {p})) }}
+        </tbody>
+    </table>
+</form>

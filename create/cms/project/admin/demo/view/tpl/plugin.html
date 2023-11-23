@@ -1,0 +1,11 @@
+<tr class="active-{{ p.active }}">
+    <td>
+        <label">
+            <input type="checkbox" class="plugin-name" value="{{ p.name }}" {{ p.active ? 'checked' : '' }}>
+            <span class="checkable"></span>
+            </label>
+    </td>
+    <td>
+        {{ p.title }}
+    </td>
+</tr>

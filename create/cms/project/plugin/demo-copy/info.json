@@ -1,0 +1,29 @@
+{
+	"title": "plugin Demo Copy",
+	"description": "",
+	"author": {
+		"name": "",
+		"contact": [
+			{
+				"type": "url",
+				"title": "My Website",
+				"data": "https://yavi.io"
+			},
+			{
+				"type": "url",
+				"title": "Facebook",
+				"data": "https://www.facebook.com/thuan.love.vietnam"
+			},
+			{
+				"type": "phone",
+				"title": "Phone",
+				"data": "1234567890"
+			},
+			{
+				"type": "email",
+				"title": "Email",
+				"data": "thuanlovevietname@gmail.com"
+			}
+		]
+	}
+}

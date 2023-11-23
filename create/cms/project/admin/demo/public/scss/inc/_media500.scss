@@ -1,0 +1,50 @@
+@media (max-width: 500px) {
+    .container {
+        display: block;
+        min-width: auto !important;
+    }
+    .sidebar {
+        width: 100%;
+        overflow: hidden;
+        transition: width 0.3s ease;
+
+        &-content, &-footer{
+            display: none;
+        }
+
+        & > div {
+            z-index: 1;
+        }
+    }
+    .show-bar > .sidebar {
+
+        & > .sidebar-content{
+            background-color: #f4f4f4;
+            display: block;
+        }
+
+        & > .sidebar-footer{
+            display: flex;
+        }
+
+    } 
+
+    .sidebar-fixed-left, .sidebar-fixed-right {
+        width: 20% !important;
+    }
+
+    .main {
+        position: fixed;
+        top: 50px;
+        left: 0 !important;
+        bottom: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .main {
+        position: fixed;
+        left: 220px;
+        height: 100%;
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "dashboard": [
+        {
+            "title": "Dashboard",
+            "url": "/admin/",
+            "icon": "📊"
+        }
+    ],
+    "posts": [
+        {
+            "title": "Posts",
+            "url": "/admin/posts",
+            "icon": "📄"
+        },
+        {
+            "title": "Comments",
+            "url": "/admin/comments",
+            "icon": "💬"
+        }
+    ],
+    "plugins": [
+        {
+            "title": "Plugins",
+            "url": "/admin/plugin",
+            "icon": "🧩"
+        },
+        {
+            "title": "Theme",
+            "url": "/admin/theme",
+            "icon": "🎨"
+        },
+        {
+            "title": "Admin",
+            "url": "/admin/admin",
+            "icon": "👑"
+        }
+    ],
+    "settings": [
+        {
+            "title": "Users",
+            "url": "/admin/users",
+            "icon": "👤"
+        },
+        {
+            "title": "Setting",
+            "url": "/admin/setting",
+            "icon": "🛠️"
+        }
+    ]
+}

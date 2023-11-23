@@ -1,0 +1,8 @@
+<ul class="sidebar-folder">
+    {{ for(var i = 0, n = list.length; i < n; i++){ }} <li class="sidebar-li">
+        <a href="{{ list[i].url }}" class="spa notifications" data-count="0" data-icon="{{ list[i].icon }}">
+            {{ list[i].title }}
+        </a>
+        </li>
+        {{ } }}
+</ul>

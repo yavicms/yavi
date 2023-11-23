@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ hook("admin:head") }}
+</head>
+
+<body>
+    <div class="app">
+        <div class="container {{ body_class() }}">
+            {{ isspa() ? null : hook("admin:sidebar") }}
+            <div class="main">
+                {{ hook("admin:main") }}
+            </div>
+        </div>
+    </div>
+    {{ isspa() ? null : hook("admin:footer") }}
+</body>
+
+</html>
