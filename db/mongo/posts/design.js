@@ -21,6 +21,16 @@ module.exports = {
     },
 
     /**
+     * Slug: là đường dẫn của post, được custom từ title;
+     * title: Đây là bài viết 1
+     * slug:  day-la-bai-viet-1
+     */
+    slug: {
+        type: String,
+        trim: true
+    },
+
+    /**
      * Nội dung bài viết
      */
     content: {
