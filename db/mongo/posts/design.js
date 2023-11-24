@@ -1,4 +1,5 @@
 const { Schema } = require("mongoose");
+const fileSchema = require("../files/schema");
 
 module.exports = {
     /**
@@ -50,14 +51,7 @@ module.exports = {
     /**
      * Mảng chứa thông tin về các files
      */
-    files: [
-        {
-            id: { type: String, required: true },
-            type: { type: String, required: true },
-            src: { type: String, required: true },
-            thumb: { type: String }
-        }
-    ],
+    files: [fileSchema],
 
     /**
      * Số lượng files hoặc sản phẩm
@@ -88,12 +82,8 @@ module.exports = {
      * Đánh giá của bài viết
      */
     rating: {
-        "1": { type: Number, default: 0 },
-        "2": { type: Number, default: 0 },
-        "3": { type: Number, default: 0 },
-        "4": { type: Number, default: 0 },
-        "5": { type: Number, default: 0 },
-        average: { type: Number, default: 0 }
+        type: [Number],
+        default: [0, 0, 0, 0, 0]
     },
 
     /**
