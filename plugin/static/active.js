@@ -3,6 +3,17 @@ const { is } = require("yavi/lib");
 
 module.exports = function (Plugin) {
 
+    Object.defineProperty(Plugin.prototype, "deactive", {
+        writable: false,
+        value() {
+            // bước 1: xóa plugin ra khỏi danh sách
+            Plugin.remove(this.ID);
+
+            // bước 2: xóa các events của plugin
+            Plugin.emit("plugin.remove", this.ID);
+        }
+    });
+
     function active_plugin(type, name, callback) {
 
         // bước 1: nếu đã tồn tại thì ngừng xử lí
@@ -27,18 +38,16 @@ module.exports = function (Plugin) {
         if (name === theme.name) return;
 
         // bước 3: hủy các cài đặt của theme cũ
-        theme.deactive.then(function () {
+        theme.deactive();
 
-            // bước 4: active theme mới
-            Plugin.LoadOne(type, name, function () {
+        // bước 4: active theme mới
+        Plugin.LoadOne(type, name, function () {
 
-                // bước 5: update file /project/info.json
-                Plugin.info.set(type, name);
-                Plugin.info.update();
+            // bước 5: update file /project/info.json
+            Plugin.info.set(type, name);
+            Plugin.info.update();
 
-                callback && callback();
-            });
-
+            callback && callback();
         });
     };
     Object.defineProperty(Plugin, "__active", {
@@ -69,14 +78,13 @@ module.exports = function (Plugin) {
                 if (plugin) {
 
                     // bước 3: tiến hành hủy các cài đặt của plugin
-                    plugin.deactive.then(function () {
+                    plugin.deactive();
 
-                        // bước 4: update file: /project/info.json
-                        Plugin.info.plugins.remove(name);
-                        Plugin.info.update();
+                    // bước 4: update file: /project/info.json
+                    Plugin.info.plugins.remove(name);
+                    Plugin.info.update();
 
-                        callback && callback();
-                    });
+                    callback && callback();
                 }
             }
         }
@@ -123,11 +131,10 @@ module.exports = function (Plugin) {
                         // bước 2: hủy các cài đặt của theme cũ
                         if (name === theme.name) {
 
-                            theme.deactive.then(function () {
-                                // bước 3: update file /project/info.json
-                                Plugin.info.remove(type);
-                                Plugin.info.update();
-                            });
+                            theme.deactive();
+                            // bước 3: update file /project/info.json
+                            Plugin.info.remove(type);
+                            Plugin.info.update();
                         }
 
                         ok = 1;

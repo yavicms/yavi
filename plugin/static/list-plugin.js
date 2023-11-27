@@ -58,7 +58,7 @@ module.exports = function (Plugin) {
                 /**
                  * bước 4: khởi động plugins
                  */
-                loop(Plugin.info.plugins.all(), (plugin_name) => this.LoadOne("plugin", plugin_name, null, 1));
+                loop(Plugin.info.plugins, (plugin_name) => this.LoadOne("plugin", plugin_name, null, 1));
             }
         },
         "LoadOne": {

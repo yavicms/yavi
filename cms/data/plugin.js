@@ -49,6 +49,5 @@ module.exports = function get_plugin_list(req) {
         data.count_deactive = data.count_all - data.count_active;
 
         success(data);
-
     });
 };

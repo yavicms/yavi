@@ -1,14 +1,14 @@
-const Plugin = require("yavi/plugin/lib");
+const Plugin = require('./lib/class');
 
 /**
  *  Static
  */
-const staticSetDir = require("yavi/plugin/static/set-dir");
-const staticGetID = require("yavi/plugin/static/set-get-id");
-const staticListPlugin = require("yavi/plugin/static/list-plugin");
-const staticActive = require("yavi/plugin/static/active");
-const staticEvent = require("yavi/plugin/static/event");
-const staticAction = require("yavi/plugin/static/action");
+const staticSetDir = require("./static/set-dir");
+const staticGetID = require("./static/set-get-id");
+const staticListPlugin = require("./static/list-plugin");
+const staticActive = require("./static/active");
+const staticEvent = require("./static/event");
+const staticAction = require("./static/action");
 
 // set: dir, info
 staticSetDir(Plugin);
@@ -27,7 +27,5 @@ staticActive(Plugin);
 
 //
 staticAction(Plugin);
-
-//------------------- Plugin Events ---------------------
 
 module.exports = Plugin;

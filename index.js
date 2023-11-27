@@ -12,19 +12,19 @@ Object.defineProperty(App, "project", {
         App.setDir(dir);
         App.Load();
 
-        const server = httpServer(App.info.server);
+        const server = httpServer(App.$info.server);
 
         if (App.info.websocket) WebSocket(server);
 
         /**
          * 	Kết nối MongoDB
          **/
-        if (App.info.mongodb) Mongoose(App.info.mongodb);
+        if (App.$info.mongodb) Mongoose(App.$info.mongodb);
 
         /**
          * 	Kết nối Redis
          **/
-        // if (App.info.redis) Plugin.redis = new Redis(App.info.redis);
+        // if (App.$info.redis) Plugin.redis = new Redis(App.$info.redis);
     }
 });
 

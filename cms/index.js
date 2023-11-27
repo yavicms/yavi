@@ -1,6 +1,5 @@
 const PublicRouter = require("./router/public");
 const Data = require("./data");
-const Socket = require("./socket");
 const Api = require("./api");
 
 module.exports = function (app) {
@@ -50,7 +49,5 @@ module.exports = function (app) {
     app.error(require("./router/error"));
 
     Data(app);
-    Socket(app);
     Api(app);
-
 };
