@@ -1,28 +1,33 @@
-const Login = require('./login');
-const Register = require('./register');
-const Search = require('./search');
-const Confirm = require('./confirm');
+const add = require('./new');
+const list = require('./list');
 
-module.exports = function (schema, model) {
+module.exports = function (model) {
 
     /**
      * Register
      */
-    Register(schema, model);
+    add(model);
+
+    /**
+     * Get List Users
+     */
+    list(model);
+
+    // Register(schema);
 
     /**
      * Xác nhận người dùng
      */
-    Confirm(schema, model);
+    // Confirm(schema);
 
     /**
      * Login
      */
-    Login(schema, model);
+    // Login(schema);
 
     /**
      * Tìm kiếm người dùng
      * Đầu vào: info: { text, limit, page }
      */
-    Search(schema, model);
+    // Search(schema);
 }

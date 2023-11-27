@@ -5,7 +5,7 @@ module.exports = {
     /**
      *  Key
      */
-    _id: {
+    key: {
         type: String,
         required: true,
         trim: true,
@@ -57,11 +57,5 @@ module.exports = {
             k: { type: String },
             v: { type: Schema.Types.Mixed }
         }
-    ],
-
-    /**
-     * Thời gian đăng hoặc cập nhật
-     */
-    created: { type: Date, default: Date.now },
-    updated: { type: Date, default: Date.now }
+    ]
 };

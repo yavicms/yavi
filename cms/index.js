@@ -1,6 +1,7 @@
 const PublicRouter = require("./router/public");
 const Data = require("./data");
 const Socket = require("./socket");
+const Api = require("./api");
 
 module.exports = function (app) {
 
@@ -30,6 +31,8 @@ module.exports = function (app) {
     /**
      * 	/post/1
      **/
+    app.router("api", "/api/([a-z0-9\-]+)", require("./router/api"));
+
     app.router("tag", "/tag/(a-zA-Z0-9\_]+)", require("./router/page"));
     app.router("search", "/search/(a-zA-Z0-9\-\_\s]+)", require("./router/page"));
     app.router("account", "/account/(a-z\-]+)", require("./router/page"));
@@ -48,5 +51,6 @@ module.exports = function (app) {
 
     Data(app);
     Socket(app);
+    Api(app);
 
 };

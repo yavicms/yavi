@@ -13,22 +13,19 @@ module.exports = function (Plugin, addEvent, plugin_events) {
 
     Object.defineProperty(Plugin, "get_filter", {
         writable: false,
-        value(data_name, request) {
+        value: async function (data_name, request) {
 
             let $event, $data, $filter;
 
             if ($event = plugin_events.filter) {
-                if ($data = Plugin.get_data(data_name, request)) {
-
-                    $filter = typeof $data.then === "function"
-                        ? $data.then(_data => $event.emit(data_name, request, _data))
-                        : $event.emit(data_name, request, $data);
-
-                    return $filter.then(arr => arr[(arr.length - 1)] || $data);
+                if ($filter = $event[data_name]) {
+                    if ($data = Plugin.get_data(data_name, request)) {
+                        return $data
+                            .then(_data => Promise.all($filter.map(fn => fn(request, _data))))
+                            .then(arr => arr[(arr.length - 1)] || $data);
+                    }
                 }
             }
-
-            return Promise.resolve();
         }
     });
 

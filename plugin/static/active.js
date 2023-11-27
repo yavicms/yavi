@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { is } = require("yavi/lib");
 
 module.exports = function (Plugin) {
 
@@ -43,15 +44,14 @@ module.exports = function (Plugin) {
     Object.defineProperty(Plugin, "__active", {
         writable: false,
         value(type, name, callback) {
-
-            if (typeof name !== "string") return;
-
-            switch (type) {
-                case "plugin":
-                    return active_plugin(type, name, callback);
-                case "theme":
-                case "admin":
-                    return active_admin_theme(type, name, callback);
+            if (is.plugin(type + name)) {
+                switch (type) {
+                    case "plugin":
+                        return active_plugin(type, name, callback);
+                    case "theme":
+                    case "admin":
+                        return active_admin_theme(type, name, callback);
+                }
             }
         }
     });
@@ -60,54 +60,41 @@ module.exports = function (Plugin) {
         writable: false,
         value(type, name, callback) {
 
-            if (typeof name !== "string") return;
+            if (type === "plugin" && is.string(name) && name.length) {
 
-            // chỉ deactive plugin
-            if (type !== "plugin") return;
+                // bước 1: lấy thông tin plugin đã active
+                let plugin = Plugin.get(type + name);
 
-            // bước 1: lấy thông tin plugin đã active
-            let plugin = Plugin.get(type + name);
+                // bước 2: nếu chưa tồn tại thì ngừng xử lí
+                if (plugin) {
 
-            // bước 2: nếu chưa tồn tại thì ngừng xử lí
-            if (!plugin) return;
+                    // bước 3: tiến hành hủy các cài đặt của plugin
+                    plugin.deactive.then(function () {
 
-            // bước 3: tiến hành hủy các cài đặt của plugin
-            plugin.deactive.then(function () {
+                        // bước 4: update file: /project/info.json
+                        Plugin.info.plugins.remove(name);
+                        Plugin.info.update();
 
-                // bước 4: update file: /project/info.json
-                Plugin.info.plugins.remove(name);
-                Plugin.info.update();
-
-                callback && callback();
-            });
+                        callback && callback();
+                    });
+                }
+            }
         }
     });
 
     Object.defineProperty(Plugin, "update_plugin_list", {
         writable: false,
         value(list, callback) {
-
-            if (typeof list !== "object" || typeof list.length !== "number") return;
-
-            Promise.all([
-
+            if (is.array(list)) {
                 // bước 1: cài đặt lại danh sách plugins trong file: /project/info.json
-                new Promise(function (success) {
-                    Plugin.info.plugins.set(list);
-                    Plugin.info.update();
-                    success();
-                }),
+                Plugin.info.plugins.set(list);
+                Plugin.info.update();
 
                 // bước 2: xóa toàn bộ các plugin events
-                Plugin.emit("plugin.reload")
-
-            ]).then(function () {
-
-                // bước 3: tải lại các plugins
-                Plugin.Load();
+                Plugin.emit("plugin.reload");
 
                 callback && callback();
-            });
+            }
         }
     });
 
@@ -115,38 +102,45 @@ module.exports = function (Plugin) {
         writable: false,
         value(type, name, callback) {
 
-            if (typeof name !== "string") return;
+            if (is.string(name)) {
 
-            let ok, dir;
+                let ok, dir;
 
-            // bước 1: nếu đang active thì deactive
-            switch (type) {
-                case "plugin":
-                    Plugin.__deactive(type, name);
-                    ok = 1;
-                    break;
-                case "admin":
-                case "theme":
-                    // bước 1: lấy theme cũ
-                    let theme = Plugin.get(Plugin.ID[type]);
-                    // bước 2: hủy các cài đặt của theme cũ
-                    if (name === theme.name) {
-                        theme.deactive.then(function () {
-                            // bước 3: update file /project/info.json
-                            Plugin.info.remove(type);
-                            Plugin.info.update();
-                        });
+                // bước 1: nếu đang active thì deactive
+                switch (type) {
+
+                    case "plugin":
+                        Plugin.__deactive(type, name);
+                        ok = 1;
+                        break;
+
+                    case "admin":
+                    case "theme":
+
+                        // bước 1: lấy theme cũ
+                        let theme = Plugin.get(Plugin.ID[type]);
+
+                        // bước 2: hủy các cài đặt của theme cũ
+                        if (name === theme.name) {
+
+                            theme.deactive.then(function () {
+                                // bước 3: update file /project/info.json
+                                Plugin.info.remove(type);
+                                Plugin.info.update();
+                            });
+                        }
+
+                        ok = 1;
+                        break;
+
+                }
+
+                if (ok) {
+                    dir = [Plugin.dir, type, name].join("\\");
+                    if (fs.existsSync(dir)) {
+                        fs.rmSync(dir, { recursive: true, force: true });
+                        callback && callback();
                     }
-                    ok = 1;
-                    break;
-
-            }
-
-            if (ok) {
-                dir = [Plugin.dir, type, name].join("\\");
-                if (fs.existsSync(dir)) {
-                    fs.rmSync(dir, { recursive: true, force: true });
-                    callback && callback();
                 }
             }
         }

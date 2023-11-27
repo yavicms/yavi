@@ -1,5 +1,5 @@
 
-module.exports = function (Plugin, addEvent, emitEvent) {
+module.exports = function (Plugin, addEvent, runEvent) {
 
     Object.defineProperty(Plugin.prototype, "on", {
         writable: false,
@@ -12,7 +12,7 @@ module.exports = function (Plugin, addEvent, emitEvent) {
     Object.defineProperty(Plugin.prototype, "emit", {
         writable: false,
         value(action_name, request, data) {
-            return emitEvent("action", action_name, request, data);
+            return runEvent("action", action_name, request, data);
         }
     });
 

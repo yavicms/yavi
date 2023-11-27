@@ -23,7 +23,7 @@ module.exports = function (View, Plugin) {
 
             let r = this.__request;
 
-            if (!r.yavi_hook[hook_name]) r.yavi_hook[hook_name] = Plugin.get_hook(hook_name, r).then(x => x.join(""));
+            if (!r.yavi_hook[hook_name]) r.yavi_hook[hook_name] = Plugin.get_hook(hook_name, r);
 
             return r.yavi_hook[hook_name];
         }],

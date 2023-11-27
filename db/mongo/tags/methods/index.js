@@ -1,18 +1,20 @@
-const search = require('./search');
-const type = require('./type');
+const search = require('./get/search');
+const type = require('./get/type');
+const add = require('./user-new');
 
-module.exports = function (schema, model) {
+module.exports = function (model) {
 
     /**
-     * Tìm tags bằng chức năng tìm kiếm văn bản gợi ý:
+     * Tìm tags bằng chức năng tìm kiếm văn bản:
      * - _id, title, content
      */
-    search(schema, model);
+    search(model);
 
     /**
      * Lấy danh sách các danh mục dựa trên thể loại:
      * - type: tag, category, ...
      */
-    type(schema, model);
+    type(model);
 
+    add(model);
 }

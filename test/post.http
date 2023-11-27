@@ -1,0 +1,28 @@
+### Lấy danh sách bài viết
+GET http://localhost/api/post-list
+
+### Tìm kiếm bài viết
+GET http://localhost/api/post-search
+Content-Type: application/json
+
+### Lấy bài viết chi tiết
+GET http://localhost/api/post-detail
+
+### Thêm bài viết mới
+PUT http://localhost/api/post-new
+Content-Type: application/json
+
+{
+    "title": "Bai viet 1",
+    "content": "Nội dung bài viết 1"
+}
+
+### Chỉnh sửa bài viết
+POST http://localhost/api/post-edit
+Content-Type: application/json
+
+{
+    "title": "foo",
+    "body": "bar",
+    "userId": 1
+}

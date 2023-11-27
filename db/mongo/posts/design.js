@@ -94,10 +94,5 @@ module.exports = {
     rating: {
         type: [Number],
         default: [0, 0, 0, 0, 0]
-    },
-
-    /**
-     * Ngày tạo bài viết
-     */
-    created: { type: Date, default: Date.now }
+    }
 };

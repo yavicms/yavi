@@ -28,28 +28,28 @@ module.exports = function (Plugin, addEvent, plugin_events) {
     Object.defineProperty(Plugin.prototype, "get", {
         writable: false,
         value(router_name, controller) {
-            addMW(router_name, router_name, "get", controller);
+            addMW(this, router_name, "get", controller);
         }
     });
 
     Object.defineProperty(Plugin.prototype, "put", {
         writable: false,
         value(router_name, controller) {
-            addMW(router_name, router_name, "put", controller);
+            addMW(this, router_name, "put", controller);
         }
     });
 
     Object.defineProperty(Plugin.prototype, "post", {
         writable: false,
         value(router_name, controller) {
-            addMW(router_name, router_name, "post", controller);
+            addMW(this, router_name, "post", controller);
         }
     });
 
     Object.defineProperty(Plugin.prototype, "delete", {
         writable: false,
         value(router_name, controller) {
-            addMW(router_name, router_name, "delete", controller);
+            addMW(this, router_name, "delete", controller);
         }
     });
 
@@ -64,7 +64,7 @@ module.exports = function (Plugin, addEvent, plugin_events) {
 
                 if ($event = plugin_events.middleware) {
 
-                    if ($list = $event.get_event(router_name + method)) {
+                    if ($list = $event[(router_name + method)]) {
 
                         if ($stop = $list.length) {
 
@@ -72,8 +72,8 @@ module.exports = function (Plugin, addEvent, plugin_events) {
                                 if (err) return error(err);
                                 $stop > $nextid ? $list[$nextid++].controller(request, response, next) : success();
                             }
-                            next();
-                            return;
+
+                            return next();
                         }
                     }
                 }

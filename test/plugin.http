@@ -1,0 +1,10 @@
+
+###
+GET http://localhost/api/plugin-action
+Content-Type: application/json
+
+{
+    "type": "plugin",
+    "name": "demo",
+    "action": "active"
+}

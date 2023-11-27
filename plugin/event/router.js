@@ -21,7 +21,7 @@ module.exports = function (Plugin, addEvent, plugin_events) {
 
             let router_name = "error";
 
-            addEvent("routes", router_name, "prepend", {
+            addEvent(router_name, router_name, "prepend", {
                 params: [],
                 name: router_name,
                 ID: this.ID,
@@ -37,17 +37,13 @@ module.exports = function (Plugin, addEvent, plugin_events) {
 
             return new Promise(function (success, error) {
 
-                let $event, _routes, router, params;
+                let $event, router, params, $router;
 
                 if ($event = plugin_events.routes) {
 
-                    if (_routes = $event.get_all()) {
+                    for (let router_name in $event) {
 
-                        for (let router_name in _routes) {
-
-                            let $router = _routes[router_name][0];
-
-                            if (!$router || !$router.path) continue;
+                        if ($router = $event[router_name][0]) {
 
                             if (params = $router.path.exec(pathname)) {
 
@@ -57,20 +53,20 @@ module.exports = function (Plugin, addEvent, plugin_events) {
                                 break;
                             }
                         }
-
-                        if (!router) router = $event.get_first("error");
-
-                        request.router = {
-                            name: router.name,
-                            ID: router.ID,
-                            dir: router.dir
-                        };
-                        request.params = params || [];
-                        request.yavi_controller = router.controller;
-
-                        success();
-                        return;
                     }
+
+                    if (!router) router = plugin_events.error.error[0];
+
+                    request.router = {
+                        name: router.name,
+                        ID: router.ID,
+                        dir: router.dir
+                    };
+                    request.params = params || [];
+                    request.yavi_controller = router.controller;
+
+                    success();
+                    return;
                 }
 
                 error();

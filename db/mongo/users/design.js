@@ -1,3 +1,4 @@
+const { Schema } = require("mongoose");
 
 module.exports = {
 
@@ -89,15 +90,5 @@ module.exports = {
             k: { type: String, required: true, trim: true },
             v: { type: Schema.Types.Mixed, required: true }
         }
-    ],
-
-    /**
-     * Ngày đăng kí
-     */
-    created: { type: Date, default: Date.now },
-
-    /**
-     * Ngày cập nhật
-     */
-    updated: { type: Date, default: Date.now }
+    ]
 }

@@ -1,7 +1,7 @@
 const { Schema } = require("mongoose");
-const schemaDesign = require("./design");
+const design = require("./design");
 
-const userSchema = new Schema(schemaDesign, {
+const schema = new Schema(design, {
     collection: "yavi_users",
     timestamps: true
 });
@@ -9,12 +9,12 @@ const userSchema = new Schema(schemaDesign, {
 /**
  * Đăng nhập hoặc Lọc người dùng dựa vào { "key": "value" }
  */
-userSchema.index({ "login.v": 1, "login.k": 1 });
+schema.index({ "login.v": 1, "login.k": 1 });
 
 /**
  * Tìm theo tên và mô tả
  */
-userSchema.index({
+schema.index({
     "username": "text",
     "fullname": "text",
     "content": "text"
@@ -23,6 +23,6 @@ userSchema.index({
 /**
  * Lấy danh sách những người đăng kí mới
  */
-userSchema.index({ "created": 1 });
+schema.index({ "created": 1 });
 
-module.exports = userSchema;
+module.exports = schema;

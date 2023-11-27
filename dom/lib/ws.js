@@ -2,44 +2,25 @@ const { is, qs, Event } = require("yavi/lib");
 const domParser = new DOMParser();
 const notmatch = new RegExp("^/(public|favicon)");
 
-function ID(type, name) {
-
-    let $id;
-
-    switch (type) {
-        case "admin":
-            $id = 1;
-            break;
-        case "theme":
-            $id = 2;
-            break;
-        case "plugin":
-            $id = [type, name].join("-");
-            break;
-    }
-
-    return $id;
-}
-
 /**
  * Sử dụng WebSocket
  * 
  *  var socket = new WS("http://localhost:80");
  *  
  *  Gửi dữ liệu lên Server:
- *  socket.emit( "event_name", object_data, callback_function(object_data) );
+ *  socket.emit("event_name", object_data, function(object_data){});
  * 
  *  Nhận dữ liệu từ Server
- *  socket.on( "event_name", callback_function(object_data) );
+ *  socket.on("event_name", function(object_data){});
  * 
  *  Gửi dữ liệu dưới dạng Ajax
- *  socket.get("/posts/1234", function_data(posts))
+ *  socket.get("/posts/1234").then(function);
  * 
  *  Phương thức POST - PUT - DELETE
- *  socket.post("/posts/add", {content: "Bài viết mới"}));
+ *  socket.post("/posts/add", {content: "Bài viết mới"})).then(function);
  *  
  *  Gửi bài viết mới đến tất cả mọi người
- *  socket.on("/posts/add", function(post){...});
+ *  socket.on("/posts/add", function(post){});
  * 
  */
 
@@ -198,7 +179,9 @@ module.exports = class WS {
             this.request(Object.assign(options, {
                 type: "json",
                 success(message) {
-                    (typeof message === "object") ? success(message) : error();
+                    typeof message === "object"
+                        ? success(message)
+                        : error();
                 },
                 error
             })));
@@ -214,6 +197,9 @@ module.exports = class WS {
      *        }
      */
     request(options) {
+        if (typeof options !== "object") return;
+        if (notmatch.test(options.path)) return;
+
         let a = document.createElement("a");
         let fn = options.success;
 
@@ -221,38 +207,29 @@ module.exports = class WS {
         options.path = a.pathname;
         options.query = qs(a.search);
 
-        if (notmatch.test(options.path)) return;
-
         if (!options.method) options.method = "get";
         if (!options.type) options.type = "json";
 
         this.emit("http.request", options, fn);
     }
-    get(path, body, success) {
-        return this.request({ method: "get", path, body, success });
+    get(path, body) {
+        return new Promise((success, error) =>
+            this.request({ method: "get", path, body, success, error }));
     }
-    put(path, body, success) {
-        return this.request({ method: "put", path, body, success });
+    put(path, body) {
+        return new Promise((success, error) =>
+            this.request({ method: "put", path, body, success, error }));
     }
-    post(path, body, success) {
-        return this.request({ method: "post", path, body, success });
+    post(path, body) {
+        return new Promise((success, error) =>
+            this.request({ method: "post", path, body, success, error }));
     }
-    delete(path, body, success) {
-        return this.request({ method: "delete", path, body, success });
+    delete(path, body) {
+        return new Promise((success, error) =>
+            this.request({ method: "delete", path, body, success, error }));
     }
-    url(ID, page) {
-        return ["/socket", ID, page].join("/");
-    }
-    cms(page) {
-        return this.url("0", page);
-    }
-    plugin(name, page) {
-        return this.url("plugin" + name, page);
-    }
-    theme(page) {
-        return this.url("2", page);
-    }
-    admin(page) {
-        return this.url("1", page);
+    api(method, path, body) {
+        return new Promise((success, error) =>
+            this.request({ method, body, success, error, path: "/api/" + path }));
     }
 }

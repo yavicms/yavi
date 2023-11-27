@@ -10,7 +10,7 @@ module.exports = function Search(schema, model) {
      * - info.text
      * - info.type: tag, category, country, time
      */
-    schema.method("Search", async function (info) {
+    schema.static("Search", async function (info) {
 
         try {
 

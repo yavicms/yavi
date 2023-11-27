@@ -9,7 +9,7 @@ module.exports = function Type(schema, model) {
      * - limit
      * - page
      */
-    schema.method("getType", async function (type, limit, page) {
+    schema.static("getType", async function (type, limit, page) {
 
         try {
 

@@ -1,6 +1,2 @@
 
-module.exports = function (schema, model) {
-
-
-
-}
+module.exports = function (schema) { }

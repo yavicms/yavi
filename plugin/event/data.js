@@ -12,17 +12,15 @@ module.exports = function (Plugin, addEvent, plugin_events) {
 
     Object.defineProperty(Plugin, "get_data", {
         writable: false,
-        value(data_name, request) {
+        value: async function (data_name, request) {
 
             let $event = plugin_events.data, data;
 
             if ($event = plugin_events.data) {
-                if (data = $event.get_first(data_name)) {
+                if (data = $event[data_name][0]) {
                     return data(request);
                 }
             }
-
-            return $notext;
         }
     });
 

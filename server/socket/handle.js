@@ -5,9 +5,6 @@ const parseResponse = require("./response");
 const parseHandle = require("yavi/server/lib/handle");
 
 const notmatch = new RegExp("^/(public|favicon)");
-const errorhandle = function (err) {
-    if (err && App.info.dev) console.log(err);
-};
 
 module.exports = function socketHandle(socket) {
 
@@ -38,6 +35,8 @@ module.exports = function socketHandle(socket) {
             request,        // request
             socket,         // response
             options.path,   // pathname
-            errorhandle);
+            function (e) {
+                if (e && App.info.dev) console.log(e);
+            });
     });
 }

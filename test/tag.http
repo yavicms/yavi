@@ -1,0 +1,28 @@
+### Lấy danh sách bài viết
+GET http://localhost/api/tag-list
+
+### Tìm kiếm bài viết
+GET http://localhost/api/tag-search
+Content-Type: application/json
+
+### Lấy bài viết chi tiết
+GET http://localhost/api/tag-detail
+
+### Thêm bài viết mới
+PUT http://localhost/api/tag-new
+Content-Type: application/json
+
+{
+    "title": "Bai viet 1",
+    "content": "Nội dung bài viết 1"
+}
+
+### Chỉnh sửa bài viết
+POST http://localhost/api/tag-edit
+Content-Type: application/json
+
+{
+    "title": "foo",
+    "body": "bar",
+    "userId": 1
+}

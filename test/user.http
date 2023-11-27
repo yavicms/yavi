@@ -1,0 +1,30 @@
+### Lấy danh sách User
+GET http://localhost/api/user-list
+
+### Tìm kiếm User
+GET http://localhost/api/user-search
+Content-Type: application/json
+
+### Lấy User chi tiết
+GET http://localhost/api/user-detail
+
+### Thêm User mới
+PUT http://localhost/api/user-new
+Content-Type: application/json
+
+{
+    "firstname": "Nguyen",
+    "lastname": "Thuan",
+    "email": "thuanlovevietnam@gmail.com",
+    "password": "12345678"
+}
+
+### Chỉnh sửa User
+POST http://localhost/api/user-edit
+Content-Type: application/json
+
+{
+    "title": "foo",
+    "body": "bar",
+    "userId": 1
+}

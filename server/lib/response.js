@@ -11,6 +11,13 @@ module.exports = function HttpResponse(request, response) {
         data: {}
     };
 
+    response.error = function (error) {
+        response.$data.status.code = 500;
+        response.$data.status.error = error.name;
+        response.$data.status.message = error.message;
+        return response;
+    };
+
     response._yavihtml = function (dir, viewfile) {
         (new View(dir, request))
             .view(viewfile)
