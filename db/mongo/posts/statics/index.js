@@ -1,8 +1,8 @@
-const search = require('./get/search');
-const detail = require('./get/detail');
-const user = require('./get/user');
-const find = require('./get/find');
-const create = require('./put/new');
+const search = require('./search');
+const detail = require('./detail');
+const user = require('./user');
+const find = require('./find');
+const create = require('./new');
 
 module.exports = function (Post) {
 

@@ -1,2 +1,2 @@
 
-module.exports = function (schema) { }
+module.exports = function (Comment) { }

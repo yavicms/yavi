@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const schema = require('./schema');
-const methods = require('./methods');
+const statics = require('./statics');
+const Comment = mongoose.model("Comment", schema);
 
-methods(schema);
+statics(Comment);
 
-module.exports = mongoose.model("Comment", schema);
+module.exports = Comment;

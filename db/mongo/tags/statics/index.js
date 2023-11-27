@@ -1,5 +1,5 @@
-const search = require('./get/search');
-const type = require('./get/type');
+const search = require('./search');
+const type = require('./type');
 const add = require('./user-new');
 
 module.exports = function (model) {

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const schema = require('./schema');
-const methods = require('./methods');
+const statics = require('./statics');
+const Tag = mongoose.model("Tag", schema);
 
-methods(schema);
+statics(Tag);
 
-module.exports = mongoose.model("Tag", schema);
+module.exports = Tag;
