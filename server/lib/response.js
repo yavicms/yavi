@@ -3,6 +3,13 @@ const Plugin = require("yavi/plugin");
 
 module.exports = function HttpResponse(request, response) {
 
+    function render(dir, viewfile) {
+        (new View(dir, request))
+            .view(viewfile)
+            .then(text => response.end(text))
+            .catch(err => response.end());
+    };
+
     response.$data = {
         status: {
             code: 200,
@@ -18,23 +25,16 @@ module.exports = function HttpResponse(request, response) {
         return response;
     };
 
-    response._yavihtml = function (dir, viewfile) {
-        (new View(dir, request))
-            .view(viewfile)
-            .then(text => response.end(text))
-            .catch(err => response.end());
-    };
-
     response.html = function (viewfile) {
-        response._yavihtml(request.router.dir, viewfile || "main");
+        render(request.router.dir, viewfile || "main");
     };
 
     response.theme = function (viewfile) {
-        response._yavihtml(Plugin.themedir, viewfile || request.router.name);
+        render(Plugin.themedir, viewfile || request.router.name);
     };
 
     response.admin = function (viewfile) {
-        response._yavihtml(Plugin.admindir, viewfile || "main");
+        render(Plugin.admindir, viewfile || "main");
     };
 
     response.data = function (options, value) {

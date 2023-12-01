@@ -1,5 +1,8 @@
-module.exports = function (request, response) {
-    request.isajax
-        ? response.status(404, "Page not found").json()
-        : response.theme("error");
+
+module.exports = function (app) {
+    app.error(function (req, res) {
+        return req.isajax
+            ? res.status(404, "page-not-found").json()
+            : res.theme("error");
+    });
 }

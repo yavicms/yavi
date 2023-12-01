@@ -7,13 +7,13 @@ const contentType = { css: "text/css", js: "text/javascript" };
 const faviconDefault = __dirname + "/../public/image/favicon.ico";
 
 const TaskControllers = {
-    admin(response, ext) {
-        TaskControllers.common(response, "admin", ext, Plugin.ID.theme);
+    admin(res, ext) {
+        TaskControllers.common(res, "admin", ext, Plugin.ID.theme);
     },
-    main(response, ext) {
-        TaskControllers.common(response, "index", ext, Plugin.ID.admin);
+    main(res, ext) {
+        TaskControllers.common(res, "index", ext, Plugin.ID.admin);
     },
-    common(response, type, ext, $notid) {
+    common(res, type, ext, $notid) {
 
         Plugin.loop(function (plugin, ID) {
             if (ID == $notid) return;
@@ -22,81 +22,73 @@ const TaskControllers = {
 
             if (!fs.existsSync($filename)) return;
 
-            response.write(fs.readFileSync($filename));
+            res.write(fs.readFileSync($filename));
         });
     },
-    public23(request, response, ext, $filename) {
-        /**
-         *  Chỉ nhận request GET
-         */
-        if (request.method !== "get") return response.end();
+    public23(req, res, ext, $filename) {
 
         let $contentType = mime.contentType(ext);
 
-        if (!fs.existsSync($filename)) return response.end();
+        if (!fs.existsSync($filename)) return res.end();
 
-        response.setHeader("Content-Type", $contentType);
+        res.setHeader("Content-Type", $contentType);
 
         if (ISTEXT[ext])
-            response.end(fs.readFileSync($filename));
+            res.end(fs.readFileSync($filename));
         else
-            fs.createReadStream($filename).pipe(response);
+            fs.createReadStream($filename).pipe(res);
     }
 };
 
-module.exports = function PublicRouter(plugin) {
+module.exports = function PublicRouter(app) {
 
     /**
      *	Favicon . ico
      **/
-    plugin.router("_0_favicon", "/favicon.ico", function (request, response) {
+    app.router(
+        "_0_favicon",
+        "/favicon.ico",
+        function (req, res) {
+            res.setHeader("Content-Type", "image/x-icon");
 
-        /**
-         *  Chỉ nhận request GET
-         */
-        if (request.method !== "get") return response.end();
+            let $filename = `${Plugin.dir}/public/image/favicon.ico`;
+            let filename = !fs.existsSync($filename) ? faviconDefault : $filename;
 
-        response.setHeader("Content-Type", "image/x-icon");
-
-        let $filename = `${Plugin.dir}/public/image/favicon.ico`;
-        let filename = !fs.existsSync($filename) ? faviconDefault : $filename;
-
-        fs.createReadStream(filename).pipe(response);
-    });
+            fs.createReadStream(filename).pipe(res);
+        });
 
     /**
      *  Public css/js for : cms/admin/theme
      */
-    plugin.router("_1_public", "/public/(main|admin)\.(css|js)", function Publicresponse(request, response, type, ext) {
+    app.router(
+        "_1_public",
+        "/public/(main|admin)\.(css|js)",
+        function (req, res, type, ext) {
 
-        /**
-         *  Chỉ nhận request GET
-         */
-        if (request.method !== "get") return response.end();
+            res.setHeader("Content-Type", contentType[ext]);
 
-        response.setHeader("Content-Type", contentType[ext]);
+            /**
+             *  Lấy thông tin những plugin đã kích hoạt
+             */
+            TaskControllers[type](res, ext);
 
-        /**
-         *  Lấy thông tin những plugin đã kích hoạt
-         */
-        TaskControllers[type](response, ext);
-
-        response.end();
-    });
+            res.end();
+        });
 
     /**
      * 	/public/path/to/file.js
      **/
-    plugin.router("_2_public", "/public/(admin|theme|plugin)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-\/]+)\.([a-z0-9]{1,4})", function (request, response, type, name, path, ext) {
-
-        TaskControllers.public23(request, response, ext, [Plugin.dir, type, name, "public", path + "." + ext].join("/"));
-    });
+    app.router(
+        "_2_public",
+        "/public/(admin|theme|plugin)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-\/]+)\.([a-z0-9]{1,4})",
+        (req, res, type, name, path, ext) => TaskControllers.public23(req, res, ext, [Plugin.dir, type, name, "public", path + "." + ext].join("/")));
 
     /**
      * 
      */
-    plugin.router("_3_public", "/public/([a-zA-Z0-9\-\/]+)\.([a-z0-9]{1,4})", function (request, response, path, ext) {
-        TaskControllers.public23(request, response, ext, Plugin.dir + "/public/" + path + "." + ext);
-    });
+    app.router(
+        "_3_public",
+        "/public/([a-zA-Z0-9\-\/]+)\.([a-z0-9]{1,4})",
+        (req, res, path, ext) => TaskControllers.public23(req, res, ext, Plugin.dir + "/public/" + path + "." + ext));
 
 }

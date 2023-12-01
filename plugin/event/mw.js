@@ -1,12 +1,8 @@
 const $notext = "";
 
-const breakRouter = {
-    "_0_favicon": 1,
-    "_1_public": 1,
-    "_2_public": 1,
-    "_3_public": 1,
-    "_socket_": 1
-};
+/**
+    app.get("home", function(req, res, next){});
+*/
 
 module.exports = function (Plugin, addEvent, plugin_events) {
 
@@ -56,9 +52,8 @@ module.exports = function (Plugin, addEvent, plugin_events) {
     Object.defineProperty(Plugin, "run_mw", {
         writable: false,
         value(router_name, method, request, response) {
-            return new Promise(function (success, error) {
 
-                if (breakRouter[router_name]) return success();
+            return new Promise(function (success, error) {
 
                 let $event, $list, $nextid = 0, $stop;
 

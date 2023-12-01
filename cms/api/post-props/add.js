@@ -1,4 +1,4 @@
-const Tag = require('yavi/db/mongo/tags');
+const Props = require('yavi/db/mongo/post-props');
 
 /**
  * Thêm bài viết mới

@@ -49,16 +49,6 @@ module.exports = {
     },
 
     /**
-     * Mảng chứa ObjectId của các tags
-     */
-    tags: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Tag'
-        }
-    ],
-
-    /**
      * Mảng chứa thông tin về các files
      */
     files: [fileSchema],
@@ -79,7 +69,17 @@ module.exports = {
     },
 
     /**
-     * Dữ liệu có thể mở rộng
+     * Dữ liệu có thể mở rộng:
+     * 
+     * Tags:
+     * - k: tag
+     * - v: tag1, tag2
+     * 
+     * * Categoty
+     * - k: category
+     * 
+     * * Date
+     * - k: date
      */
     props: [
         {

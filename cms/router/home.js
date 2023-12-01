@@ -1,3 +1,4 @@
-module.exports = function (request, response) {
-    request.method !== "get" ? response.end() : response.theme();
+module.exports = function (app) {
+
+    app.router("home", "/", (req, res) => res.theme());
 }

@@ -9,20 +9,11 @@ const schema = new Schema(design, {
 /**
  * Đăng nhập hoặc Lọc người dùng dựa vào { "key": "value" }
  */
-schema.index({ "login.v": 1, "login.k": 1 });
+schema.index({ "props.v": 1, "props.k": 1 });
 
 /**
  * Tìm theo tên và mô tả
  */
-schema.index({
-    "username": "text",
-    "fullname": "text",
-    "content": "text"
-});
-
-/**
- * Lấy danh sách những người đăng kí mới
- */
-schema.index({ "created": 1 });
+schema.index({ "search.v": "text" });
 
 module.exports = schema;

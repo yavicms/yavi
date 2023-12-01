@@ -1,10 +1,18 @@
-const get_plugin_list = require("./plugin");
-const get_admin_theme_list = require("./theme");
+const plugins = require('./plugins');
+const users = require('./users');
+const tags = require('./tags');
+const posts = require('./posts');
+const comments = require('./comments');
 
 module.exports = function (app) {
 
-    app.data("admin:list:plugin", get_plugin_list);
-    app.data("admin:list:theme", get_admin_theme_list);
+    plugins(app);
 
-    app.data("admin:list:posts", function (req) { });
+    users(app);
+
+    tags(app);
+
+    posts(app);
+
+    comments(app);
 }

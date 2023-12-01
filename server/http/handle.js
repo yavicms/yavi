@@ -3,6 +3,7 @@ const url = require("url");
 const parseRequest = require("../lib/request");
 const parseResponse = require("./response");
 const parseHandle = require("yavi/server/lib/handle");
+const requestOptions = require('./request');
 
 module.exports = function httpServer(info, isdev) {
 
@@ -11,7 +12,8 @@ module.exports = function httpServer(info, isdev) {
         let { pathname, query } = url.parse(request.url, true);
 
         parseHandle(
-            parseRequest(request, query),
+            requestOptions(request, query),
+            parseRequest,
             parseResponse,
             request,
             response,

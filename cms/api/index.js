@@ -1,6 +1,7 @@
 const MW = require('./middleware');
+const user_props = require('./user-props');
+const post_props = require('./post-props');
 const user = require('./user');
-const tag = require('./tag');
 const post = require('./post');
 const comment = require('./comment');
 const plugin = require('./plugin');
@@ -17,15 +18,13 @@ module.exports = function (app) {
      */
     plugin(app);
 
+    user_props(app);
+    post_props(app);
+
     /**
      *  API cho ( users )
      */
     user(app);
-
-    /**
-     *  API cho ( tags )
-     */
-    tag(app);
 
     /**
      *  API cho ( posts )

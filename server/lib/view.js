@@ -21,7 +21,7 @@ class View {
     }
 
     page() {
-        return this.__request.params[0] || "home";
+        return this.__request.params[0];
     }
     body_class() {
         return [this.router(), this.page()].join(" ");

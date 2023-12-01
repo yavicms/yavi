@@ -3,6 +3,7 @@ const App = require("yavi/plugin");
 const parseRequest = require("../lib/request");
 const parseResponse = require("./response");
 const parseHandle = require("yavi/server/lib/handle");
+const requestOptions = require("./request");
 
 const notmatch = new RegExp("^/(public|favicon)");
 
@@ -24,13 +25,9 @@ module.exports = function socketHandle(socket) {
 
         let request = socket.request;
 
-        request.body = options.body;
-        request.method = options.method;
-        request.type = options.type;
-        request.issocket = 1;
-
         parseHandle(
-            parseRequest(request, options.query),
+            requestOptions(request, options),
+            parseRequest,
             parseResponse,
             request,        // request
             socket,         // response

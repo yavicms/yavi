@@ -14,11 +14,11 @@ module.exports = function (Plugin, addEvent, plugin_events) {
         writable: false,
         value: async function (data_name, request) {
 
-            let $event = plugin_events.data, data;
+            let $event = plugin_events.data, action;
 
             if ($event = plugin_events.data) {
-                if (data = $event[data_name][0]) {
-                    return data(request);
+                if (action = $event[data_name][0]) {
+                    return action(request);
                 }
             }
         }

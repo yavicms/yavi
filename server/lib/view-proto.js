@@ -8,6 +8,9 @@ module.exports = function (View, Plugin) {
     const view_info = {};
 
     const protoView = [
+        ["info", function (key) {
+            return View.get_info[key];
+        }],
         ["router", function () {
             return this.__request.router.name;
         }],
@@ -43,15 +46,6 @@ module.exports = function (View, Plugin) {
 
             return r.yavi_data[data_key];
         }],
-        ["menu", function (menu_key) {
-
-            let r = this.__request;
-
-            if (!r.yavi_menu) r.yavi_menu = {};
-            if (!r.yavi_menu[menu_key]) r.yavi_menu[menu_key] = Plugin.get_menu(menu_key);
-
-            return r.yavi_menu[menu_key];
-        }],
         ["map", function map(object, callback) {
 
             if (typeof object === "object") {
@@ -68,8 +62,31 @@ module.exports = function (View, Plugin) {
                 return Promise.all(arr).then(r => r.join($notext));
             }
         }],
-        ["info", function (key) {
-            return View.get_info[key];
+        ["array_to_object", function (array, unique) {
+
+            var obj = {};
+
+            if (unique) {
+                for (let i = 0, n = array.length, r; i < n; i++) {
+                    r = array[i];
+                    obj[r.k] = r.v;
+                }
+            }
+            else {
+
+                for (let i = 0, n = array.length, props = {}, r; i < n; i++) {
+                    r = array[i];
+
+                    if (!props[r.k]) {
+                        props[r.k] = 1;
+                        obj[r.k] = [];
+                    }
+
+                    obj[r.k].push(r);
+                }
+            }
+
+            return obj;
         }]
     ];
 
