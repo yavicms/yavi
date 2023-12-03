@@ -1,12 +1,6 @@
 const { Schema } = require("mongoose");
 
 module.exports = {
-
-    _id: {
-        type: Schema.Types.ObjectId,
-        auto: true
-    },
-
     /**
      * Loại file: image, video, ...
      */

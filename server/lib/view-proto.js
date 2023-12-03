@@ -1,4 +1,12 @@
 const $notext = "";
+const intervals = [
+    { label: 'năm', seconds: 31536000 },
+    { label: 'tháng', seconds: 2592000 },
+    { label: 'ngày', seconds: 86400 },
+    { label: 'giờ', seconds: 3600 },
+    { label: 'phút', seconds: 60 },
+    { label: 'giây', seconds: 0 }
+];
 
 module.exports = function (View, Plugin) {
 
@@ -8,43 +16,63 @@ module.exports = function (View, Plugin) {
     const view_info = {};
 
     const protoView = [
-        ["info", function (key) {
-            return View.get_info[key];
+        ["set", function (k, v) {
+            this.__yavi[k] = v;
+        }],
+        ["get", function (k) {
+            return this.__yavi[k];
+        }],
+        ["page", function () {
+            return this.__req.params[0];
         }],
         ["router", function () {
-            return this.__request.router.name;
+            return this.__req.router.name;
         }],
-        ["public", function (filename) {
-            return ["/public", this.__yavi.type, this.__yavi.name, filename].join("/");
+        ["body_class", function () {
+            return this.router() + " " + this.page();
+        }],
+        ["isspa", function () {
+            return this.__req.issocket;
+        }],
+        ["info", function (key) {
+            return View.get_info[key];
         }],
         ["view", function (filename, data) {
             filename = filename.replaceAll(".", "\\");
             if (data) Object.assign(this, data);
-            return View.html(`${this.__yavi.dir}\\view\\${filename}.html`, this);
+            return View.html(`${this.dir}\\view\\${filename}.html`, this);
         }],
         ["hook", function (hook_name) {
 
-            let r = this.__request;
+            const r = this.__req;
 
-            if (!r.yavi_hook[hook_name]) r.yavi_hook[hook_name] = Plugin.get_hook(hook_name, r);
+            if (!r._yavi_hook[hook_name]) r._yavi_hook[hook_name] = Plugin.get_hook(hook_name, r);
 
-            return r.yavi_hook[hook_name];
+            return r._yavi_hook[hook_name];
         }],
         ["content", function (content_key) {
 
-            let r = this.__request;
+            const r = this.__req;
 
-            if (!r.yavi_content[content_key]) r.yavi_content[content_key] = Plugin.get_content(content_key, r);
+            if (!r._yavi_content[content_key]) r._yavi_content[content_key] = Plugin.get_content(content_key, r);
 
-            return r.yavi_content[content_key];
+            return r._yavi_content[content_key];
         }],
         ["data", function (data_key) {
 
-            let r = this.__request;
+            const r = this.__req;
 
-            if (!r.yavi_data[data_key]) r.yavi_data[data_key] = Plugin.get_data(data_key, r);
+            if (!r._yavi_data[data_key]) r._yavi_data[data_key] = Plugin.get_data(data_key, r);
 
-            return r.yavi_data[data_key];
+            return r._yavi_data[data_key];
+        }],
+        ["filter", function (filter_key) {
+
+            const r = this.__req;
+
+            if (!r._yavi_filter[filter_key]) r._yavi_filter[filter_key] = Plugin.get_filter(filter_key, r);
+
+            return r._yavi_filter[filter_key];
         }],
         ["map", function map(object, callback) {
 
@@ -87,6 +115,20 @@ module.exports = function (View, Plugin) {
             }
 
             return obj;
+        }],
+        ["timeAgo", function (date) {
+            var seconds = Math.floor((new Date() - date) / 1000);
+
+            for (var i = 0, counter; i < intervals.length; i++) {
+                counter = Math.floor(seconds / intervals[i].seconds);
+                if (counter > 0) {
+                    if (counter === 1) {
+                        return counter + ' ' + intervals[i].label + ' trước'; // singular (1 day ago)
+                    } else {
+                        return counter + ' ' + intervals[i].label + ' trước'; // plural (2 days ago)
+                    }
+                }
+            }
         }]
     ];
 

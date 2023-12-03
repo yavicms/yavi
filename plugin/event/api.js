@@ -1,3 +1,7 @@
+const error_page = {
+    name: "page_not_found",
+    message: "page_not_found"
+};
 
 module.exports = function (Plugin, addEvent, plugin_events) {
 
@@ -5,7 +9,7 @@ module.exports = function (Plugin, addEvent, plugin_events) {
         writable: false,
         value(method, name, action) {
             action.ID = this.ID;
-            addEvent("api", name + method, "prepend", action);
+            addEvent("api" + method, name, "prepend", action);
         }
     });
 
@@ -13,17 +17,17 @@ module.exports = function (Plugin, addEvent, plugin_events) {
         writable: false,
         value: async function (method, name, req) {
 
-            let $event, $list, action, $path = name + method;
+            let $event, $list, action, $key = "api" + method;
 
-            if ($event = plugin_events.api) {
-                if ($list = $event[$path]) {
+            if ($event = plugin_events[$key]) {
+                if ($list = $event[name]) {
                     if (action = $list[0]) {
-                        return action(req);
+                        return await action(req);
                     }
                 }
             }
 
-            throw new Error("page_not_found");
+            throw new Error(error_page);
         }
     });
 

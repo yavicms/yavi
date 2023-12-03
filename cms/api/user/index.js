@@ -9,21 +9,21 @@ module.exports = function (app) {
 
     /**
      * Lấy danh sách bài viết:
-     * url: /api/user-list?{limit,page,field:"user,tags,comments"}
+     * url: /api/users?{limit,page,field:"user,tags,comments"}
      */
-    app.api("get", "user-list", list);
+    app.api("get", "users", list);
+
+    /**
+     * Lấy bài viết chi tiết
+     * url: /api/user?{id, field:"user,tags,comments"}
+     */
+    app.api("get", "user", detail);
 
     /**
      * Tìm kiếm bài viết:
      * url: /api/user-search?{q}
      */
     app.api("get", "user-search", search);
-
-    /**
-     * Lấy bài viết chi tiết
-     * url: /api/user-detail?{id, field:"user,tags,comments"}
-     */
-    app.api("get", "user-detail", detail);
 
     /**
      * Tạo bài viết mới
@@ -37,7 +37,7 @@ module.exports = function (app) {
      * url: /api/user-edit
      * body: {id,user,title,content}
      */
-    app.api("user", "user-edit", update);
+    app.api("post", "user-edit", update);
 
     /**
      * Xóa bài viết

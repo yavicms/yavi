@@ -7,11 +7,6 @@ const page = require('./page');
 
 module.exports = function (app) {
 
-    home(app);
-    admin(app);
-    api(app);
-    page(app);
-
     /**
      *  Error Page
      */
@@ -21,4 +16,10 @@ module.exports = function (app) {
      *	Favicon.ico , Public File : css/js/image
      **/
     public(app);
+
+    admin(app);
+    api(app);
+    page(app);
+
+    home(app);
 }

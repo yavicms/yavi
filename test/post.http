@@ -1,20 +1,21 @@
 ### Lấy danh sách bài viết
-GET http://localhost/api/post-list
+GET http://localhost/api/posts
+
+### Lấy bài viết chi tiết
+GET http://localhost/api/post
 
 ### Tìm kiếm bài viết
 GET http://localhost/api/post-search
 Content-Type: application/json
-
-### Lấy bài viết chi tiết
-GET http://localhost/api/post-detail
 
 ### Thêm bài viết mới
 PUT http://localhost/api/post-new
 Content-Type: application/json
 
 {
-    "title": "Bai viet 1",
-    "content": "Nội dung bài viết 1"
+    "title": "Thám Tử Lừng Danh Conan",
+    "content": "Vụ Án Tại Nhà Hàng Trung Hoa",
+    "user": "656614e6674e555be1a0a2ba"
 }
 
 ### Chỉnh sửa bài viết

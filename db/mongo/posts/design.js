@@ -7,8 +7,7 @@ module.exports = {
      */
     parent: {
         type: Schema.Types.ObjectId,
-        ref: 'Post',
-        default: null
+        ref: 'Post'
     },
 
     /**
@@ -40,6 +39,15 @@ module.exports = {
     },
 
     /**
+     * Type:
+     * post, page, product, ...
+     */
+    type: {
+        type: String,
+        default: "post"
+    },
+
+    /**
      * Thông tin người đăng bài
      */
     user: {
@@ -52,14 +60,6 @@ module.exports = {
      * Mảng chứa thông tin về các files
      */
     files: [fileSchema],
-
-    /**
-     * Số lượng files hoặc sản phẩm
-     */
-    quantity: {
-        type: Number,
-        default: 0
-    },
 
     /**
      * Ảnh đại diện của bài viết
@@ -75,10 +75,10 @@ module.exports = {
      * - k: tag
      * - v: tag1, tag2
      * 
-     * * Categoty
+     * Categoty
      * - k: category
      * 
-     * * Date
+     * Date
      * - k: date
      */
     props: [
@@ -94,5 +94,17 @@ module.exports = {
     rating: {
         type: [Number],
         default: [0, 0, 0, 0, 0]
+    },
+
+    comment_status: {
+        type: String,
+        trim: true,
+        enum: ["open", "close"],
+        default: "open"
+    },
+
+    password: {
+        type: String,
+        trim: true
     }
 };

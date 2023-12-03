@@ -1,12 +1,12 @@
 ### Lấy danh sách User
-GET http://localhost/api/user-list
+GET http://localhost/api/users
 
 ### Tìm kiếm User
 GET http://localhost/api/user-search
 Content-Type: application/json
 
 ### Lấy User chi tiết
-GET http://localhost/api/user-detail
+GET http://localhost/api/user
 
 ### Thêm User mới
 PUT http://localhost/api/user-new

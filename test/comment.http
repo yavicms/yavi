@@ -1,12 +1,12 @@
 ### Lấy danh sách bài viết
-GET http://localhost/api/comment-list
+GET http://localhost/api/comments
+
+### Lấy bài viết chi tiết
+GET http://localhost/api/comment
 
 ### Tìm kiếm bài viết
 GET http://localhost/api/comment-search
 Content-Type: application/json
-
-### Lấy bài viết chi tiết
-GET http://localhost/api/comment-detail
 
 ### Thêm bài viết mới
 PUT http://localhost/api/comment-new

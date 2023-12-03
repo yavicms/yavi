@@ -47,7 +47,7 @@ module.exports = function (View, Plugin) {
         value(path, view) {
             try {
                 let fn = new Function("YaviData", Parser(Text(path)));
-                return fn(view);
+                return fn.call(view, view);
             } catch (error) {
                 // App.error("View.html", __filename, error);
                 return Promise.reject(error.toString());

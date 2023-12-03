@@ -1,17 +1,33 @@
 const $notext = "";
+const $all = ":ALL";
 
 /**
+    app.get(function(req, res, next){});
     app.get("home", function(req, res, next){});
+
+    app.use(function(req, res, next){});
+    app.use("home", function(req, res, next){});
 */
 
 module.exports = function (Plugin, addEvent, plugin_events) {
 
     function addMW(plugin, router, method, controller) {
-        addEvent("middleware", router + method, "append", {
-            ID: plugin.ID,
-            dir: plugin.dir,
-            controller
-        });
+        switch (typeof router) {
+            case "string":
+                addEvent("middleware" + method, router, "append", {
+                    ID: plugin.ID,
+                    dir: plugin.dir,
+                    controller
+                });
+                break;
+            case "function":
+                addEvent("middleware" + method, $all, "append", {
+                    ID: plugin.ID,
+                    dir: plugin.dir,
+                    controller: router
+                });
+                break;
+        }
     };
 
     Object.defineProperty(Plugin.prototype, "use", {
@@ -49,33 +65,62 @@ module.exports = function (Plugin, addEvent, plugin_events) {
         }
     });
 
-    Object.defineProperty(Plugin, "run_mw", {
-        writable: false,
-        value(router_name, method, request, response) {
+    //---------------------------------------------------------------
 
-            return new Promise(function (success, error) {
+    function run_mw(router, method, req, res) {
 
-                let $event, $list, $nextid = 0, $stop;
+        return new Promise(function (success, error) {
 
-                if ($event = plugin_events.middleware) {
+            let $event, $list, $stop, $nextid = 0, $key = "middleware" + method;
 
-                    if ($list = $event[(router_name + method)]) {
+            if ($event = plugin_events[$key]) {
 
-                        if ($stop = $list.length) {
+                if ($list = $event[router]) {
 
-                            function next(err) {
-                                if (err) return error(err);
-                                $stop > $nextid ? $list[$nextid++].controller(request, response, next) : success();
-                            }
+                    if ($stop = $list.length) {
 
-                            return next();
+                        function next(err) {
+                            if (err) return error(err);
+                            $stop > $nextid ? $list[$nextid++].controller(req, res, next) : success();
                         }
+
+                        return next();
                     }
                 }
+            }
 
-                success();
-            });
+            success();
+        });
+    }
+
+    Object.defineProperty(Plugin, "run_mw", {
+        writable: false,
+        value(router, method, req, res) {
+
+            /**
+             * Chạy middleware theo thứ tự:
+             * 
+             * 1. mw chung cho toàn routes:
+             *      - router: ":ALL"
+             *      - method: ""
+             * 
+             * 2. mw riêng của router
+             *      - router: router
+             *      - method: ""
+             * 
+             * 3. mw phương thức method cho toàn bộ routes:
+             *      - router: ":ALL"
+             *      - method: method
+             * 
+             * 4. mw phương thức method cho riêng router
+             *      - router: router
+             *      - method: router
+             */
+            return run_mw($all, $notext, req, res)
+                .then(() => run_mw(router, $notext, req, res))
+                .then(() => run_mw($all, method, req, res))
+                .then(() => run_mw(router, method, req, res))
+                .then(() => req.router.controller(req, res, ...req.params));
         }
     });
-
 }

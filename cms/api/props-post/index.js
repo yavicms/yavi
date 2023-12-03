@@ -9,40 +9,40 @@ module.exports = function (app) {
 
     /**
      * Lấy danh sách bài viết:
-     * url: /api/post-props?{limit,page,field:"user,tags,comments"}
+     * url: /api/props-post?{limit,page,field:"user,tags,comments"}
      */
-    app.api("get", "post-props", find);
+    app.api("get", "props-post", find);
 
     /**
      * Tìm kiếm bài viết:
-     * url: /api/post-props-search?{q}
+     * url: /api/props-post-search?{q}
      */
-    app.api("get", "post-props-search", search);
+    app.api("get", "props-post-search", search);
 
     /**
      * Lấy bài viết chi tiết
-     * url: /api/post-props-detail?{id, field:"user,tags,comments"}
+     * url: /api/props-post-detail?{id, field:"user,tags,comments"}
      */
-    app.api("get", "post-props-detail", detail);
+    app.api("get", "props-post-detail", detail);
 
     /**
      * Tạo bài viết mới
-     * url: /api/post-props-new
+     * url: /api/props-post-new
      * body: {title,content,user,type}
      */
-    app.api("put", "post-props-new", add);
+    app.api("put", "props-post-new", add);
 
     /**
      * Chỉnh sửa bài viết
-     * url: /api/post-props-edit
+     * url: /api/props-post-edit
      * body: {id,user,title,content}
      */
-    app.api("post", "post-props-edit", update);
+    app.api("post", "props-post-edit", update);
 
     /**
      * Xóa bài viết
-     * url: /api/post-props-delete
+     * url: /api/props-post-delete
      * body: {id,user}
      */
-    app.api("delete", "post-props-delete", remove);
+    app.api("delete", "props-post-delete", remove);
 }

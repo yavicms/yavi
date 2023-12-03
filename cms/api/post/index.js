@@ -9,21 +9,21 @@ module.exports = function (app) {
 
     /**
      * Lấy danh sách bài viết:
-     * url: /api/post-list?{limit,page,field:"user,tags,comments"}
+     * url: /api/posts?{limit,page,field:"user,tags,comments"}
      */
-    app.api("get", "post-list", find);
+    app.api("get", "posts", find);
+
+    /**
+     * Lấy bài viết chi tiết
+     * url: /api/post?{id, field:"user,tags,comments"}
+     */
+    app.api("get", "post", detail);
 
     /**
      * Tìm kiếm bài viết:
      * url: /api/post-search?{q}
      */
     app.api("get", "post-search", search);
-
-    /**
-     * Lấy bài viết chi tiết
-     * url: /api/post-detail?{id, field:"user,tags,comments"}
-     */
-    app.api("get", "post-detail", detail);
 
     /**
      * Tạo bài viết mới

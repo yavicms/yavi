@@ -1,3 +1,4 @@
+const FormPost = require("../form");
 
 module.exports = function (Post) {
 
@@ -5,9 +6,15 @@ module.exports = function (Post) {
         writable: false,
         value: async function (data) {
             try {
-                console.log(data);
+
+                let form = new FormPost(data);
+                let post = new Post(form.data);
+
+                return post.save();
+
             } catch (error) {
                 console.log(__filename, error);
+                throw new Error(error);
             }
         }
     });

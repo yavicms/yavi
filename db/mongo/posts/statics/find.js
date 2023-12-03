@@ -12,12 +12,58 @@ module.exports = function (Post) {
      */
     Object.defineProperty(Post, "Find", {
         writable: false,
+        value(options, $limit, $page) {
+            try {
+
+                if (!options) options = {};
+
+                let $condition = [];
+
+                /**
+                 * Điều kiện tìm kiếm
+                 */
+
+                /**
+                 * Phân trang 
+                 */
+                if (!is.number($limit) || $limit < 1) $limit = 10;
+                if (!is.number($page) || $page < 1) $page = 1;
+                $condition.push({ $skip: ($page - 1) * $limit }, { $limit });
+
+                /**
+                 * Liên kết với User
+                 */
+                $condition.push({
+                    $lookup: {
+                        from: "yavi_users",
+                        localField: "user",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                });
+
+                /**
+                 * 
+                 */
+                return Post.aggregate($condition);
+
+            } catch (error) {
+                throw error;
+            }
+        }
+    });
+    Object.defineProperty(Post, "Finds", {
+        writable: false,
         value: async function (options) {
 
             try {
                 if (is.object(options) && is.object(options.post)) {
 
-                    let $options = [{ $match: options.post }];
+                    let $options = [];
+
+                    if (options.post) {
+                        $options.push({ $match: options.post });
+                    }
 
                     /**
                      * Liên kết với User thông qua user field
@@ -43,14 +89,14 @@ module.exports = function (Post) {
                     /**
                      * Liên kết với Tag thông qua tags field
                      */
-                    $options.push({
-                        $lookup: {
-                            from: "yavi_tags", // Tên collection của Tag
-                            localField: "tags",
-                            foreignField: "_id",
-                            as: "tags"
-                        }
-                    });
+                    // $options.push({
+                    //     $lookup: {
+                    //         from: "yavi_tags", // Tên collection của Tag
+                    //         localField: "tags",
+                    //         foreignField: "_id",
+                    //         as: "tags"
+                    //     }
+                    // });
 
                     /**
                      * Điều kiện của Tags
@@ -58,7 +104,7 @@ module.exports = function (Post) {
                      *        options.tag = { "tags.type": "tag" }
                      */
                     if (is.object(options.tag)) {
-                        $options.push({ $match: options.tag });
+                        $options.push({ $match: { k: "tag", v: options.tag } });
                     }
 
                     /**

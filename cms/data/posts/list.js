@@ -1,3 +1,9 @@
+const Post = require("yavi/db/mongo/posts");
+
+
 module.exports = function (app) {
-    app.data("posts:list", function (req) { });
+
+    app.data("admin:posts", function (req) {
+        return Post.Find();
+    });
 }

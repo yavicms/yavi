@@ -4,30 +4,14 @@ const ViewParser = require("./view-parser");
 
 class View {
 
-    __request = {};
     __yavi = {};
 
-    constructor(dirname, request) {
-        this.__request = request;
-        this.#setDir(dirname);
+    constructor(dirname, req) {
+        this.__req = req;
+        this.__dir = dirname;
     }
-    #setDir(dirname) {
-        let keys = dirname.split("\\"), n = keys.length - 1;
-
-        this.__yavi.dir = dirname;
-
-        this.__yavi.type = keys[(n - 1)];
-        this.__yavi.name = keys[n];
-    }
-
-    page() {
-        return this.__request.params[0];
-    }
-    body_class() {
-        return [this.router(), this.page()].join(" ");
-    }
-    isspa() {
-        return this.__request.issocket || this.__request.isajax;
+    get dir() {
+        return this.__dir;
     }
 }
 
