@@ -1,6 +1,7 @@
-const Data = require("./data");
-const Api = require("./api");
+const data = require("./data");
+const api = require("./api");
 const routes = require('./router');
+const hook = require("./app/hook");
 
 module.exports = function (app) {
 
@@ -8,6 +9,9 @@ module.exports = function (app) {
 
     routes(app);
 
-    Data(app);
-    Api(app);
+    data(app);
+
+    api(app);
+
+    hook(app);
 };

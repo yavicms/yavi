@@ -5,6 +5,8 @@ const Plugin = require("yavi/plugin");
 const ISTEXT = { css: 1, js: 1 };
 const contentType = { css: "text/css", js: "text/javascript" };
 const faviconDefault = __dirname + "/../public/image/favicon.ico";
+const end_js = Buffer.from(';if(window.load_page) load_page(document.location);');
+const $notext = "";
 
 const TaskControllers = {
     admin(res, ext) {
@@ -24,6 +26,8 @@ const TaskControllers = {
 
             res.write(fs.readFileSync($filename));
         });
+
+        res.end(ext === "js" ? end_js : $notext);
     },
     public23(req, res, ext, $filename) {
 
@@ -33,10 +37,13 @@ const TaskControllers = {
 
         res.setHeader("Content-Type", $contentType);
 
-        if (ISTEXT[ext])
-            res.end(fs.readFileSync($filename));
-        else
+        if (ISTEXT[ext]) {
+            res.write(fs.readFileSync($filename));
+            res.end(ext === "js" ? end_js : $notext);
+        }
+        else {
             fs.createReadStream($filename).pipe(res);
+        }
     }
 };
 
@@ -71,17 +78,15 @@ module.exports = function PublicRouter(app) {
              *  Lấy thông tin những plugin đã kích hoạt
              */
             TaskControllers[type](res, ext);
-
-            res.end();
         });
 
     /**
-     * 	/public/path/to/file.js
+     * 	/public/admin/name/file.js
      **/
     app.router(
         "_2_public",
         "/public/(admin|theme|plugin)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-\/]+)\.([a-z0-9]{1,4})",
-        (req, res, type, name, path, ext) => TaskControllers.public23(req, res, ext, [Plugin.dir, type, name, "public", path + "." + ext].join("/")));
+        (req, res, type, name, path, ext) => TaskControllers.public23(req, res, ext, [Plugin.dir, type, name, "public/main", path + "." + ext].join("/")));
 
     /**
      * 

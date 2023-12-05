@@ -12,21 +12,53 @@ const $all = ":ALL";
 module.exports = function (Plugin, addEvent, plugin_events) {
 
     function addMW(plugin, router, method, controller) {
+
+        let $router,
+            $controller,
+            $key = "middleware" + method,
+            $action = "append",
+            ID = plugin.ID,
+            dir = plugin.dir;
+
+        switch (typeof controller) {
+            case "function":
+                $controller = [controller];
+                break;
+            case "object":
+                if (controller.length) $controller = controller;
+                break;
+        }
+
         switch (typeof router) {
             case "string":
-                addEvent("middleware" + method, router, "append", {
-                    ID: plugin.ID,
-                    dir: plugin.dir,
-                    controller
-                });
+                $router = [router];
                 break;
             case "function":
-                addEvent("middleware" + method, $all, "append", {
-                    ID: plugin.ID,
-                    dir: plugin.dir,
-                    controller: router
-                });
+                $router = [$all];
+                if ($controller) $controller.unshift(router);
                 break;
+            case "object":
+                if (router.length) {
+                    switch (typeof router[0]) {
+                        case "string":
+                            $router = router;
+                            break;
+                        case "function":
+                            $router = [$all];
+                            $controller = router;
+                            break;
+                    }
+                }
+                break;
+        }
+
+        if ($router && $controller) {
+
+            $router.forEach(function (router) {
+                $controller.forEach(function (controller) {
+                    addEvent($key, router, $action, { ID, dir, controller });
+                });
+            });
         }
     };
 
@@ -120,7 +152,8 @@ module.exports = function (Plugin, addEvent, plugin_events) {
                 .then(() => run_mw(router, $notext, req, res))
                 .then(() => run_mw($all, method, req, res))
                 .then(() => run_mw(router, method, req, res))
-                .then(() => req.router.controller(req, res, ...req.params));
+                .then(() => req.router.controller(req, res, ...req.params))
+                .catch((error) => (typeof error === "string") ? res.end(error) : res.error(error).json());
         }
     });
 }

@@ -26,6 +26,16 @@ module.exports = {
     ],
 
     /**
+     * Lưu các thông tin cài đặt của User
+     */
+    setting: [
+        {
+            k: { type: String, trim: true, required: true },
+            v: { type: Schema.Types.Mixed, required: true }
+        }
+    ],
+
+    /**
      * Phục vụ tìm kiếm: 
      * search.k: fullname, username, content
      * search.v: ...

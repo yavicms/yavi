@@ -10,13 +10,13 @@
 <body>
     <div class="app">
         <div class="container {{ page() }}">
-            {{ isspa() ? null : content("admin:sidebar") }}
+            {{ if(!isspa()) $R.push(content("admin:sidebar")); }}
             <div class="main">
                 {{ content("admin:content:" + page()) }}
             </div>
         </div>
     </div>
-    {{ isspa() ? null : hook("admin:footer") }}
+    {{ if(!isspa()) $R.push(hook("admin:footer")); }}
 </body>
 
 </html>

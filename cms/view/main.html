@@ -16,7 +16,7 @@
             {{ hook("content") }}
         </div>
     </div>
-    {{ hook("footer") }}
+    {{ if(!isspa()) $R.push(hook("admin:footer")); }}
 </body>
 
 </html>

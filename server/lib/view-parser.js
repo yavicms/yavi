@@ -12,11 +12,11 @@ module.exports = function (View, Plugin) {
     function Parser(text) {
         var re = /\{\{(.+?)\}\}/g,
             reExp = /(^( )?(var|if|for|else|elseif|switch|case|break|default|\:|\{|\}|\(|\)|\+|\-|\*|\\))(.*)?/g,
-            code = 'with(YaviData){ var r=[];',
+            code = 'with(YaviData){ let $R=[];',
             cursor = 0,
             match;
         var add = function (line, js) {
-            js ? code += line.match(reExp) ? line : "r.push(" + line + ");" : code += line != "" ? "r.push('" + line.replace(/'/g, '&#39') + "');" : "";
+            js ? code += line.match(reExp) ? line : "$R.push(" + line + ");" : code += line != "" ? "$R.push('" + line.replace(/'/g, '&#39') + "');" : "";
             return add;
         };
         text = text.replace(/[\n\r\t]/g, '').replace(/\s{2,}/g, '');
@@ -25,7 +25,7 @@ module.exports = function (View, Plugin) {
             cursor = match.index + match[0].length;
         };
         add(text.substr(cursor, text.length - cursor));
-        return code + "return Promise.all(r).then(r => r.join('')).catch(e => console.log(e));}";
+        return code + "return Promise.all($R).then($r => $r.join('')).catch($e => console.log($e));}";
     };
 
     function Text(path) {
