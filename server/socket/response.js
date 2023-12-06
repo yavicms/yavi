@@ -8,25 +8,14 @@ module.exports = function (request, response) {
     let _ended = 0;
 
     response.end = response.write = response.send = function (text) {
-        if (_ended) {
-            _ended = 0;
-            return;
-        };
-        response.emit("http.request", text, isFn);
+        if (_ended) return _ended = 0;
         _ended = 1;
+        response.emit("http.request", text, isFn);
     };
 
     response.json = function (data) {
-        if (data) response.data(data);
+        response.data(data);
         response.end(response.$data);
-    };
-
-    response.status = function (code, message) {
-
-        if (code) response.$data.status.code = code;
-        if (message) response.$data.status.message = message;
-
-        return response;
     };
 
     response.setHeader = function () { };

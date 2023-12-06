@@ -34,8 +34,8 @@ module.exports = class WS {
     #$connected = false;
     #reloadcount = 0;
 
-    constructor(uri, protocols) {
-        this.#$ws = new WebSocket(uri, protocols);
+    constructor(uri, protocols, options) {
+        this.#$ws = new WebSocket(uri, protocols, options);
         this.#$ws.onmessage = e => this.#message(JSON.parse(e.data));
         this.#$ws.onopen = e => {
             this.connected(true);
@@ -125,8 +125,8 @@ module.exports = class WS {
     }
 
     /**
-     *  Lấy dữ liệu dạng Http Ajax
-     *  socket.get("http://localhost:80/posts/1234")
+     *  Lấy dữ liệu HTML
+     *  socket.html("http://localhost:80/")
      */
     html(path, body) {
         return new Promise((success, error) =>
@@ -212,24 +212,31 @@ module.exports = class WS {
 
         this.emit("http.request", options, fn);
     }
-    get(path, body) {
-        return new Promise((success, error) =>
-            this.request({ method: "get", path, body, success, error }));
+    httpRequest(method, path, body) {
+        return (new Promise((success, error) =>
+            this.request({ type: "json", method, path, body, success, error })))
+            .then(function (response) {
+                if (response.type === "success") {
+                    return response.data;
+                } else {
+                    throw new Error(response);
+                }
+            });
     }
-    put(path, body) {
-        return new Promise((success, error) =>
-            this.request({ method: "put", path, body, success, error }));
+    get(path, query, headers) {
+        return this.httpRequest("get", path, query, headers);
     }
-    post(path, body) {
-        return new Promise((success, error) =>
-            this.request({ method: "post", path, body, success, error }));
+    put(path, body, headers) {
+        return this.httpRequest("put", path, body, headers);
     }
-    delete(path, body) {
-        return new Promise((success, error) =>
-            this.request({ method: "delete", path, body, success, error }));
+    post(path, body, headers) {
+        return this.httpRequest("post", path, body, headers);
     }
-    api(method, path, body) {
+    delete(path, body, headers) {
+        return this.httpRequest("delete", path, body, headers);
+    }
+    api(method, path, body, headers) {
         return new Promise((success, error) =>
-            this.request({ method, body, success, error, path: "/api/" + path }));
+            this.request({ headers, method, body, success, error, path: "/api/" + path }));
     }
 }

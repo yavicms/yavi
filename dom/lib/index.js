@@ -17,10 +17,6 @@ Object.defineProperties(window, {
         writable: false,
         value: require("yavi/lib")
     },
-    ajax: {
-        writable: false,
-        value: require("./ajax")
-    },
     WS: {
         writable: false,
         value(uri, protocols) {
@@ -60,6 +56,10 @@ Object.defineProperties(window, {
                 Promise.all(list.map(fn => fn()));
             }
         }
+    },
+    cookie: {
+        writable: false,
+        value: require("./cookie")
     },
     page: {
         writable: false,

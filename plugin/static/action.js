@@ -8,7 +8,6 @@ const protoHook = require("yavi/plugin/event/hook");
 const protoMenu = require("yavi/plugin/event/menu");
 const protoMW = require("yavi/plugin/event/mw");
 const protoRouter = require("yavi/plugin/event/router");
-const protoApi = require("yavi/plugin/event/api");
 
 /**
     plugin_events:
@@ -151,9 +150,4 @@ module.exports = function (Plugin) {
      * Router
      */
     protoRouter(Plugin, addEvent, plugin_events);
-
-    /**
-     * Api
-     */
-    protoApi(Plugin, addEvent, plugin_events);
 }

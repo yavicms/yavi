@@ -11,38 +11,38 @@ module.exports = function (app) {
      * Lấy danh sách bài viết:
      * url: /api/props-user?{limit,page,field:"user,tags,comments"}
      */
-    app.api("get", "props-user", find);
+    app.content("get.api.props-user", find);
 
     /**
      * Tìm kiếm bài viết:
      * url: /api/props-user-search?{q}
      */
-    app.api("get", "props-user-search", search);
+    app.content("get.api.props-user-search", search);
 
     /**
      * Lấy bài viết chi tiết
      * url: /api/props-user-detail?{id, field:"user,tags,comments"}
      */
-    app.api("get", "props-user-detail", detail);
+    app.content("get.api.props-user-detail", detail);
 
     /**
      * Tạo bài viết mới
      * url: /api/props-user-new
      * body: {title,content,user,type}
      */
-    app.api("put", "props-user-new", add);
+    app.content("put.api.props-user-new", add);
 
     /**
      * Chỉnh sửa bài viết
      * url: /api/props-user-edit
      * body: {id,user,title,content}
      */
-    app.api("post", "props-user-edit", update);
+    app.content("post.api.props-user-edit", update);
 
     /**
      * Xóa bài viết
      * url: /api/props-user-delete
      * body: {id,user}
      */
-    app.api("delete", "props-user-delete", remove);
+    app.content("delete.api.props-user-delete", remove);
 }

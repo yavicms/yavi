@@ -35,7 +35,7 @@ module.exports = function (Plugin, addEvent, plugin_events) {
                 break;
             case "function":
                 $router = [$all];
-                if ($controller) $controller.unshift(router);
+                !$controller ? $controller = [router] : $controller.unshift(router);
                 break;
             case "object":
                 if (router.length) {
@@ -140,20 +140,14 @@ module.exports = function (Plugin, addEvent, plugin_events) {
              *      - router: router
              *      - method: ""
              * 
-             * 3. mw phương thức method cho toàn bộ routes:
-             *      - router: ":ALL"
-             *      - method: method
-             * 
              * 4. mw phương thức method cho riêng router
              *      - router: router
              *      - method: router
              */
             return run_mw($all, $notext, req, res)
                 .then(() => run_mw(router, $notext, req, res))
-                .then(() => run_mw($all, method, req, res))
                 .then(() => run_mw(router, method, req, res))
-                .then(() => req.router.controller(req, res, ...req.params))
-                .catch((error) => (typeof error === "string") ? res.end(error) : res.error(error).json());
+                .then(() => req.router.controller(req, res, ...req.params));
         }
     });
 }

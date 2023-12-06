@@ -11,38 +11,38 @@ module.exports = function (app) {
      * Lấy danh sách bài viết:
      * url: /api/posts?{limit,page,field:"user,tags,comments"}
      */
-    app.api("get", "posts", find);
+    app.content("get.api.posts", find);
 
     /**
      * Lấy bài viết chi tiết
      * url: /api/post?{id, field:"user,tags,comments"}
      */
-    app.api("get", "post", detail);
+    app.content("get.api.post", detail);
 
     /**
      * Tìm kiếm bài viết:
      * url: /api/post-search?{q}
      */
-    app.api("get", "post-search", search);
+    app.content("get.api.post-search", search);
 
     /**
      * Tạo bài viết mới
      * url: /api/post-new
      * body: {title,content,user,type}
      */
-    app.api("put", "post-new", add);
+    app.content("put.api.post-new", add);
 
     /**
      * Chỉnh sửa bài viết
      * url: /api/post-edit
      * body: {id,user,title,content}
      */
-    app.api("post", "post-edit", update);
+    app.content("post.api.post-edit", update);
 
     /**
      * Xóa bài viết
      * url: /api/post-delete
      * body: {id,user}
      */
-    app.api("delete", "post-delete", remove);
+    app.content("delete.api.post-delete", remove);
 }

@@ -13,8 +13,7 @@ module.exports = function (
     parseResponse,
     request,
     response,
-    pathname,
-    errorhandle
+    pathname
 ) {
     Promise.all([
         Plugin.checkRouter(request, pathname),
@@ -24,11 +23,18 @@ module.exports = function (
         View.reset()
     ])
         .then(function () {
+
             let router = request.router.name;
 
             return breakRouter[router]
                 ? request.router.controller(request, response, ...request.params)
                 : Plugin.run_mw(router, request.method, request, response);
         })
-        .catch(errorhandle);
+        .catch(function (error) {
+            if (request.x_yavi_type === "json") {
+                response.error(error);
+            } else {
+                response.theme("error");
+            }
+        });
 }

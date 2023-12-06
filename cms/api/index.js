@@ -1,4 +1,3 @@
-const MW = require('./middleware');
 const user_props = require('./props-user');
 const post_props = require('./props-post');
 const user = require('./user');
@@ -7,11 +6,6 @@ const comment = require('./comment');
 const plugin = require('./plugin');
 
 module.exports = function (app) {
-
-    /**
-     * Set Middleware for router "api"
-     */
-    MW(app);
 
     /**
      * API cho ( plugin/theme/admin )

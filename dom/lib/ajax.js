@@ -19,136 +19,148 @@
 const domParser = new DOMParser();
 const { is } = require("yavi/lib");
 
-module.exports = class Ajax {
+class Ajax {
 
-    #$x = new XMLHttpRequest();
-    #$a = document.createElement("a");
-    #$define = {
-        header: { "X-Requested-With": "XMLHttpRequest" },
-        method: "get",
-        type: "json"
+    $options = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Yavi-Type": "json"
+        }
     };
+    $defines = {
+        type: "json",
+        action: "json"
+    };
+    $a = document.createElement("a");
 
     constructor(options) {
-        Object.assign(this, options);
+        if (typeof options === "object") Object.assign(this, options);
 
-        this.#$x.open(this.method, this.#$a.href, true);
-        this.#$x.send(this.#$define.data);
+        this.$x = fetch(this.$a.href, this.$options);
     }
 
     set method(method) {
-        this.#$define.method = method.toUpperCase();
+        this.$options.method = method.toUpperCase();
+    }
+    set headers(headers) {
+        Object.assign(this.$options.headers, headers);
     }
     set url(url) {
-        this.#$a.href = url;
+        this.$a.href = url;
     }
     set type(type) {
-        if (!is(type, "undefined")) this.#$define.type = type;
-    }
-    set header(header) {
-        loop(Object.assign(this.#$define.header, header),
-            ($header, $key) => this.#$x.setRequestHeader($key, $header));
-    }
-    set query(data) {
+        switch (type) {
+            case "json":
+                this.$options.headers["X-Yavi-Type"] = "json";
+                this.$options.headers["Content-Type"] = "application/json";
+                break;
 
-        switch (is(data)) {
+            case "text":
+            case "html":
+                this.$options.headers["X-Yavi-Type"] = "html";
+                this.$options.headers["Content-Type"] = "text/plain";
+                break;
+        }
+    }
+    set query(query) {
+
+        switch (is(query)) {
 
             case "string":
-                this.#$a.search = data;
+                this.$a.search = query;
                 break;
 
             case "object":
-                let array = [this.#$a.search];
-                loop(data, (value, key) => array.push(`${key}=${value}`));
-                this.#$a.search = array.join("&");
+                let array = [this.$a.search];
+                loop(query, (value, key) => array.push(`${key}=${value}`));
+                this.$a.search = array.join("&");
                 break;
         }
     }
-    set data(data) {
-        if (is(data, "object")) {
-            this.#$define.header["Content-Type"] = "GET" === this.method ? "text/plain" : "application/json";
-            this.#$define.data = JSON.stringify(data);
+    set body(body) {
+        if (typeof body === "object") {
+            this.type = "json";
+            this.$options.body = JSON.stringify(body);
         }
-    }
-    set file(file) {
-        this.method = "post";
-        this.type = "text";
-        this.#$define.header["Content-Type"] = file.type;
-        this.#$define.data = file;
-        this.hasFile = true;
-    }
-    set success(fn) {
-        var type = this.#$define.type;
-
-        try {
-            if (typeof fn === "function") {
-                this.#$x.onreadystatechange = function () {
-                    if (this.readyState === 4 && this.status === 200) {
-                        switch (type) {
-                            case "json":
-                                return fn(JSON.parse(this.responseText));
-                            case "html":
-                                return fn(domParser.parseFromString(this.responseText, "text/html"));
-                            case "text":
-                                return fn(this.responseText);
-                            default:
-                                throw fn(`Ajax Error: Has not response type: ${type}`);
-                        }
-                    }
-                }
-            }
-
-        } catch (error) {
-            throw error;
-        }
-    }
-    set progress(fn) {
-        if (is(fn, "function")) {
-            if (this.hasFile) {
-                this.#$x.upload.onprogress = e => fn(e.loaded / e.total)
-            } else {
-                this.#$x.onprogress = e => fn(e.loaded)
-            }
-        }
-    }
-    set error(fn) {
-        if (is(fn, "function")) this.#$x.onerror = fn;
-    }
-
-    get method() {
-        return this.#$define.method;
-    }
-
-    static #callAjax(options) {
-        return new Promise(function (success, error) {
-            options.success = success;
-            options.error = error;
-            new Ajax(options);
-        });
-    }
-    static get(url, data) {
-        return this.#callAjax({ method: "get", url, data });
-    }
-    static put(url, data) {
-        return this.#callAjax({ method: "put", url, data });
-    }
-    static post(url, data) {
-        return this.#callAjax({ method: "post", url, data });
-    }
-    static delete(url, data) {
-        return this.#callAjax({ method: "delete", url, data });
-    }
-    static html(url, data) {
-        return this.#callAjax({ method: "get", type: "html", url, data });
-    }
-    static text(url, data) {
-        return this.#callAjax({ method: "get", type: "text", url, data });
-    }
-    static json(url, data) {
-        return this.#callAjax({ method: "get", type: "json", url, data });
-    }
-    static upload(url, file, progress) {
-        return new Promise((success, error) =>
-            new Ajax({ url, file, success, error, progress }));
     }
 }
+
+Object.defineProperties(Ajax, {
+    text: {
+        writable: false,
+        value(url, options) {
+            options.url = url;
+            options.type = "text";
+            options.method = "get";
+            return (new Ajax(options)).$x
+                .then((response) => response.text());
+        }
+    },
+    html: {
+        writable: false,
+        value(url, options) {
+            options.url = url;
+            options.type = "html";
+            options.method = "get";
+            return (new Ajax(options)).$x
+                .then((response) => response.text())
+                .then((text) => domParser.parseFromString(text, "text/html"));
+        }
+    },
+
+    json: {
+        writable: false,
+        value(url, options) {
+            options.url = url;
+            options.type = "json";
+            return (new Ajax(options)).$x
+                .then((res) => res.json())
+                .then(function (r) {
+                    if (r.type === "success") {
+                        return r.data;
+                    } else {
+                        throw r.message;
+                    }
+                });
+        }
+    },
+    get: {
+        writable: false,
+        value(url, query, headers) {
+            return Ajax.json(url, { query, headers, method: "get" });
+        }
+    },
+    put: {
+        writable: false,
+        value(url, body, headers) {
+            return Ajax.json(url, { body, headers, method: "put" });
+        }
+    },
+    post: {
+        writable: false,
+        value(url, body, headers) {
+            return Ajax.json(url, { body, headers, method: "post" });
+        }
+    },
+    delete: {
+        writable: false,
+        value(url, body, headers) {
+            return Ajax.json(url, { body, headers, method: "delete" });
+        }
+    },
+
+    upload: {
+        writable: false,
+        value(url, files, progress) { }
+    },
+    download: {
+        writable: false,
+        value() { }
+    }
+});
+
+Object.defineProperty(window, "ajax", {
+    writable: false,
+    value: Ajax
+});

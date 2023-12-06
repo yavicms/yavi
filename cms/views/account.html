@@ -4,19 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    {{ hook("head") }}
+    {{ hook("admin:head:login") }}
 </head>
 
 <body>
-    <div id="app">
+    <div class="app">
         <div class="container {{ body_class() }}">
-            {{ hook("header") }}
-            {{ hook("leftbar") }}
-            {{ hook("content") }}
+            {{ main_content }}
         </div>
     </div>
-    {{ if(!isspa()) $R.push(hook("admin:footer")); }}
+    {{ if(!isspa()) $R.push(hook("admin:footer:login")); }}
 </body>
 
 </html>

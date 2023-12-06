@@ -31,9 +31,7 @@ module.exports = function socketHandle(socket) {
             parseResponse,
             request,        // request
             socket,         // response
-            options.path,   // pathname
-            function (e) {
-                if (e && App.info.dev) console.log(e);
-            });
+            options.path    // pathname
+        );
     });
 }

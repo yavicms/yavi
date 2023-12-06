@@ -18,11 +18,7 @@ module.exports = function httpServer(info, isdev) {
             request,
             response,
             pathname,
-            query,
-            function (e) {
-                response.end();
-                if (isdev) console.log(e);
-            }
+            query
         );
     }
 

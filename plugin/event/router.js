@@ -34,44 +34,38 @@ module.exports = function (Plugin, addEvent, plugin_events) {
     Object.defineProperty(Plugin, "checkRouter", {
         writable: false,
         value(request, pathname) {
+            try {
 
-            return new Promise(function (success, error) {
+                let $event, $router, params;
 
-                try {
+                if ($event = plugin_events.routes) {
 
-                    let $event, $router, params;
+                    for (let router_name in $event) {
 
-                    if ($event = plugin_events.routes) {
+                        if ($router = $event[router_name][0]) {
 
-                        for (let router_name in $event) {
+                            if (params = $router.path.exec(pathname)) {
 
-                            if ($router = $event[router_name][0]) {
+                                params.splice(0, 1);
+                                request.router = $router;
+                                request.params = params;
 
-                                if (params = $router.path.exec(pathname)) {
-
-                                    params.splice(0, 1);
-                                    request.router = $router;
-                                    request.params = params;
-
-                                    break;
-                                }
+                                break;
                             }
                         }
                     }
-
-                    if (!params) {
-                        request.params = [];
-                        request.router = plugin_events.error.error[0];
-                    }
-
-                    success();
-
-                } catch (e) {
-
-                    error(e);
-
                 }
-            });
+
+                if (!params) {
+                    request.params = [];
+                    request.router = plugin_events.error.error[0];
+                }
+
+            } catch (e) {
+
+                throw e;
+
+            }
         }
     });
 
