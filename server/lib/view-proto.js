@@ -22,19 +22,22 @@ module.exports = function (View, Plugin) {
         ["get", function (k) {
             return this.__yavi[k];
         }],
-        ["page", function () {
-            return this.__req.params[0];
+        ["$page", function () {
+            return this.$req.params[0];
         }],
-        ["router", function () {
-            return this.__req.router.name;
+        ["$router", function () {
+            return this.$req.router.name;
         }],
-        ["body_class", function () {
-            return this.router() + " " + this.page();
+        ["$body_class", function () {
+            return this.$router() + " " + this.$page();
         }],
-        ["isspa", function () {
-            return this.__req.issocket;
+        ["$spa", function () {
+            return this.$req._yavi_spa;
         }],
-        ["info", function (key) {
+        ["$signed", function () {
+            return this.$req._yavi_signed;
+        }],
+        ["$info", function (key) {
             return View.get_info[key];
         }],
         ["view", function (filename, data) {
@@ -44,23 +47,15 @@ module.exports = function (View, Plugin) {
         }],
         ["hook", function (hook_name) {
 
-            const r = this.__req;
+            const r = this.$req;
 
             if (!r._yavi_hook[hook_name]) r._yavi_hook[hook_name] = Plugin.get_hook(hook_name, r);
 
             return r._yavi_hook[hook_name];
         }],
-        ["content", function (content_key) {
-
-            const r = this.__req;
-
-            if (!r._yavi_content[content_key]) r._yavi_content[content_key] = Plugin.get_content(content_key, r);
-
-            return r._yavi_content[content_key];
-        }],
         ["data", function (data_key) {
 
-            const r = this.__req;
+            const r = this.$req;
 
             if (!r._yavi_data[data_key]) r._yavi_data[data_key] = Plugin.get_data(data_key, r);
 
@@ -68,7 +63,7 @@ module.exports = function (View, Plugin) {
         }],
         ["filter", function (filter_key) {
 
-            const r = this.__req;
+            const r = this.$req;
 
             if (!r._yavi_filter[filter_key]) r._yavi_filter[filter_key] = Plugin.get_filter(filter_key, r);
 

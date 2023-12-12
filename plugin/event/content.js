@@ -58,7 +58,7 @@ module.exports = function (Plugin, addEvent, plugin_events) {
     /**
      * app.get_content("get.account.login", req);
      */
-    Object.defineProperty(Plugin, "get_content", {
+    Object.defineProperty(Plugin.prototype, "get_content", {
         writable: false,
         value: async function (data_name, req) {
 
@@ -75,11 +75,6 @@ module.exports = function (Plugin, addEvent, plugin_events) {
 
             throw new Error();
         }
-    });
-
-    Object.defineProperty(Plugin.prototype, "get_content", {
-        writable: false,
-        value: Plugin.get_content
     });
 
 }

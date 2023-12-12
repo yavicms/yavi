@@ -5,7 +5,7 @@ module.exports = function (app) {
     /**
      * Lấy danh sách thông tin Users:
      */
-    app.data("admin:users:list", function (req) {
+    app.data("admin.users", function (req) {
 
     });
 }

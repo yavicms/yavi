@@ -1,54 +1,53 @@
-const bcrypt = require('bcrypt');
-const salt = bcrypt.genSaltSync(13);
 
 module.exports = class UserForm {
 
     props = [];
     search = [];
-    name = {};
-    _has_role = 0;
+    login = [];
+    public = {};
 
     constructor(data) {
         if (typeof data === "object") Object.assign(this, data);
     }
 
     set email(value) {
-        this.props.push({ k: "email", v: value });
+        this.login.push({ k: "email", v: value });
     }
     set phone(value) {
-        this.props.push({ k: "phone", v: value });
-    }
-
-    set firstname(name) {
-        this.name.first = name;
-    }
-    set lastname(name) {
-        this.name.last = name;
-    }
-
-    set fullname(name) {
-        this.search.push({ k: "name", v: name });
+        this.login.push({ k: "phone", v: value });
     }
 
     set role(role) {
-        if (!this._has_role) {
+        if (!this.public.role) {
             this.props.push({ k: "role", v: role });
-            this._has_role = 1;
+            this.public.role = role;
         }
     }
 
-    set username(username) {
-        let data = { k: "username", v: username };
-        this.props.push(data);
-        this.search.push(data);
+    set fullname(name) {
+        this.search.push({ k: "fullname", v: name });
+        this.public.fullname = name;
     }
+    set username(username) {
+        this.search.push({ k: "username", v: username });
+        this.public.username = username;
+    }
+    set firstname(name) {
+        this.public.firstname = name;
+    }
+    set lastname(name) {
+        this.public.lastname = name;
+    }
+    get register() {
 
-    get data() {
+        let time = new Date();
+
+        this.props.push({ k: "createdAt", v: time });
+        this.public.createdAt = time;
 
         this.role = "user";
 
-        this.fullname = this.name.first + " " + this.name.last;
-        this.password = bcrypt.hashSync(this.password, salt);
+        // this.fullname = this.public.firstname + " " + this.public.lastname;
 
         return this;
     }

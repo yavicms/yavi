@@ -7,7 +7,7 @@ class View {
     __yavi = {};
 
     constructor(dirname, req) {
-        this.__req = req;
+        this.$req = req;
         this.__dir = dirname;
     }
     get dir() {

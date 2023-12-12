@@ -10,27 +10,30 @@ module.exports = function (View, Plugin) {
     let TextView = {};
 
     function Parser(text) {
-        var re = /\{\{(.+?)\}\}/g,
+        var re = /::(.+?)::/g,
             reExp = /(^( )?(var|if|for|else|elseif|switch|case|break|default|\:|\{|\}|\(|\)|\+|\-|\*|\\))(.*)?/g,
-            code = 'with(YaviData){ let $R=[];',
+            code = 'with(YaviData){ let $=[];',
             cursor = 0,
             match;
         var add = function (line, js) {
-            js ? code += line.match(reExp) ? line : "$R.push(" + line + ");" : code += line != "" ? "$R.push('" + line.replace(/'/g, '&#39') + "');" : "";
+            js ? code += line.match(reExp) ? line : "$.push(" + line + ");" : code += line != $notext ? "$.push('" + line.replace(/'/g, '&#39') + "');" : $notext;
             return add;
         };
-        text = text.replace(/[\n\r\t]/g, '').replace(/\s{2,}/g, '');
         while (match = re.exec(text)) {
             add(text.slice(cursor, match.index))(match[1], true);
             cursor = match.index + match[0].length;
         };
         add(text.substr(cursor, text.length - cursor));
-        return code + "return Promise.all($R).then($r => $r.join('')).catch($e => console.log($e));}";
+        return code + "return Promise.all($).then($r => $r.join('')).catch($e => console.log($e));};";
     };
 
     function Text(path) {
         if (is.undefined(TextView[path]))
-            TextView[path] = fs.existsSync(path) ? fs.readFileSync(path, "utf8") : $notext;
+            TextView[path] = fs.existsSync(path)
+                ? fs.readFileSync(path, "utf8")
+                    .replace(/[\n\r\t]/g, $notext)
+                    .replace(/\s{2,}/g, $notext)
+                : $notext;
 
         return TextView[path];
     };

@@ -7,9 +7,15 @@ const schema = new Schema(design, {
 });
 
 /**
- * Đăng nhập hoặc Lọc người dùng dựa vào { "key": "value" }
+ * Đăng nhập:
+ * User.findOne({ "login": "value" })
  */
-schema.index({ "props.v": 1, "props.k": 1 });
+schema.index({ "login.v": 1 });
+
+/**
+ * Lọc người dùng dựa vào { "key": "value" }
+ */
+schema.index({ "props.k": -1, "props.v": -1 });
 
 /**
  * Tìm theo tên và mô tả

@@ -1,5 +1,5 @@
-require("yavi/dom");
-require("yavi/dom/lib/ajax");
-require("yavi/dom/lib/prototype");
-require("yavi/dom/lib/view");
-require("./lib/modal");
+require("./lib");
+require("./lib/ajax");
+require("./lib/prototype");
+require("./lib/view");
+require("./inc/modal");

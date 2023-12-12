@@ -34,37 +34,30 @@ module.exports = function (Plugin, addEvent, plugin_events) {
     Object.defineProperty(Plugin, "checkRouter", {
         writable: false,
         value(request, pathname) {
-            try {
 
-                let $event, $router, params;
+            let $event, $router, params;
 
-                if ($event = plugin_events.routes) {
+            if ($event = plugin_events.routes) {
 
-                    for (let router_name in $event) {
+                for (let router_name in $event) {
 
-                        if ($router = $event[router_name][0]) {
+                    if ($router = $event[router_name][0]) {
 
-                            if (params = $router.path.exec(pathname)) {
+                        if (params = $router.path.exec(pathname)) {
 
-                                params.splice(0, 1);
-                                request.router = $router;
-                                request.params = params;
+                            params.splice(0, 1);
+                            request.router = $router;
+                            request.params = params;
 
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
+            }
 
-                if (!params) {
-                    request.params = [];
-                    request.router = plugin_events.error.error[0];
-                }
-
-            } catch (e) {
-
-                throw e;
-
+            if (!params) {
+                request.params = [];
+                request.router = plugin_events.error.error[0];
             }
         }
     });

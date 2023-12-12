@@ -10,7 +10,10 @@ module.exports = function (Post) {
                 let form = new FormPost(data);
                 let post = new Post(form.data);
 
-                return post.save();
+                let $post = await post.save();
+
+                if ($post) return $post;
+                else throw new Error();
 
             } catch (error) {
                 console.log(__filename, error);

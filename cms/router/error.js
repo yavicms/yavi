@@ -1,8 +1,10 @@
 
 module.exports = function (app) {
+
     app.error(function (req, res) {
-        return req.isajax
-            ? res.error()
-            : res.theme("error");
+
+        req.x_yavi_type === "json"
+            ? res.error("page_not_found")
+            : res.html("error", app.get_data("error"));
     });
 }

@@ -1,10 +1,9 @@
 const View = require("yavi/server/lib/view");
 const Plugin = require("yavi/plugin");
 const breakRouter = {
-    "_0_favicon": 1,
-    "_1_public": 1,
-    "_2_public": 1,
-    "_3_public": 1
+    "0:public": 1,
+    "1:public": 1,
+    "2:public": 1
 };
 
 module.exports = function (
@@ -27,7 +26,7 @@ module.exports = function (
             let router = request.router.name;
 
             return breakRouter[router]
-                ? request.router.controller(request, response, ...request.params)
+                ? request.router.controller(request, response)
                 : Plugin.run_mw(router, request.method, request, response);
         })
         .catch(function (error) {

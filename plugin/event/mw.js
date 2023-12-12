@@ -147,7 +147,7 @@ module.exports = function (Plugin, addEvent, plugin_events) {
             return run_mw($all, $notext, req, res)
                 .then(() => run_mw(router, $notext, req, res))
                 .then(() => run_mw(router, method, req, res))
-                .then(() => req.router.controller(req, res, ...req.params));
+                .then(() => req.router.controller(req, res));
         }
     });
 }
