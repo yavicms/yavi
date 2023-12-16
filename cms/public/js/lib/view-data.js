@@ -1,40 +1,12 @@
-const { loop, $notext, Event } = require("yavi/lib");
+const { $notext } = require("yavi/lib");
 
 class ViewData {
 
-    $hooks = {};
     $cookie = cookie;
-    $events = new Event();
+    $views = [];
 
     constructor(data) {
-        if (typeof data === "object") {
-
-            let self = this;
-
-            loop(data, function (value, key) {
-
-                if (typeof value === "object" && value.__ishook) {
-                    self.$hooks[key] = value;
-                    return;
-                }
-
-                self[key] = value;
-            });
-        }
-    }
-
-    hook(name) {
-        return this.$hooks[name]
-            ? ('<span class="hook-' + name + '" style="display:none;"></span>')
-            : $notext;
-    }
-
-    callback(fn) {
-        if (typeof fn === "function")
-            this.$events.on("name", (node) => fn.call(node, this));
-    }
-    _emit(node) {
-        this.$events.emit("name", node);
+        if (typeof data === "object") Object.assign(this, data);
     }
 
 }
@@ -64,10 +36,10 @@ Object.defineProperties(ViewData, {
      */
     html: {
         writable: false,
-        value(text, view) {
+        value(text, viewdata) {
             try {
                 let fn = new Function("YaviData", parser_text(text));
-                return fn.call(view, view);
+                return fn.call(viewdata, viewdata);
             } catch (error) {
                 console.log(error);
                 return $notext;
@@ -107,6 +79,18 @@ Object.defineProperties(ViewData.prototype, {
         writable: false,
         value(key) {
             return lang(key);
+        }
+    },
+    view: {
+        writable: false,
+        value(node) {
+            if (typeof node === "object") {
+                this.$views.push(node);
+                return '<span class="view-data-location" style="display:none;"></span>';
+            }
+            else {
+                return node;
+            }
         }
     }
 });

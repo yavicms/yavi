@@ -30,6 +30,14 @@ module.exports = {
     },
 
     /**
+     * Mô tả bài viết
+     */
+    description: {
+        type: String,
+        trim: true
+    },
+
+    /**
      * Nội dung bài viết
      */
     content: {
@@ -37,6 +45,7 @@ module.exports = {
         required: true,
         trim: true
     },
+    content_html: String,
 
     /**
      * Type:
@@ -94,6 +103,11 @@ module.exports = {
     rating: {
         type: [Number],
         default: [0, 0, 0, 0, 0]
+    },
+
+    count: {
+        type: Object,
+        default: { view: 0, rating: 0, comment: 0, file: 0 }
     },
 
     comment_status: {

@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { loop } = require("yavi/lib");
 const Plugin = require("yavi/plugin");
 
 /**
@@ -9,44 +8,60 @@ module.exports = function get_plugin_list(req) {
 
     return new Promise(function (success) {
 
-        let plugindir = Plugin.dir + "/plugin/",
+        var plugindir = Plugin.dir + "/plugin/",
             data = {
-                count_all: 0,
-                count_active: 0,
-                count_deactive: 0,
+                type: "plugin",
+                status: req.query.list,
+                count: { all: 0, active: 0, deactive: 0 },
                 list: []
             },
-            gettype = req.query.list;
+            files, add;
 
-        if (!fs.existsSync(plugindir)) return success([]);
+        switch (data.status) {
+            case "active":
+                add = function (info) {
+                    if (info.active) {
+                        ++data.count.active;
+                        data.list.push(info);
+                    }
+                };
+                break;
 
-        loop(fs.readdirSync(plugindir), function (plugin_name) {
-            let info = Plugin.json(plugindir + plugin_name + "/info.json");
+            case "noactive":
+                add = function (info) {
+                    info.active
+                        ? ++data.count.active
+                        : data.list.push(info);
+                };
+                break;
 
-            info.type = "plugin";
-            info.name = plugin_name;
-            info.active = Plugin.has(info.type + info.name);
-
-            if (info.active) ++data.count_active;
-            ++data.count_all;
-
-            switch (gettype) {
-                case "active":
-                    if (info.active) data.list.push(info);
-                    break;
-
-                case "noactive":
-                    if (!info.active) data.list.push(info);
-                    break;
-
-                default:
+            default:
+                data.status = "all";
+                add = function (info) {
+                    if (info.active) ++data.count.active;
                     data.list.push(info);
-                    break;
+                };
+                break;
+        }
+
+        if (fs.existsSync(plugindir)) {
+
+            files = fs.readdirSync(plugindir);
+            data.count.all = files.length;
+
+            for (var i = 0; i < data.count.all; i++) {
+                var plugin_name = files[i],
+                    info = Plugin.json(plugindir + plugin_name + "/info.json");
+
+                info.type = "plugin";
+                info.name = plugin_name;
+                info.active = Plugin.has(info.type + info.name);
+
+                add(info);
             }
 
-        });
-
-        data.count_deactive = data.count_all - data.count_active;
+            data.count.deactive = data.count.all - data.count.active;
+        }
 
         success(data);
     });

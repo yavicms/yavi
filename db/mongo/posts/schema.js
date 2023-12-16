@@ -7,10 +7,9 @@ const postSchema = new Schema(design, {
 });
 
 /**
- * Index để tìm kiếm theo người đăng và tags
+ * Index để tìm kiếm theo người đăng
  */
 postSchema.index({ user: 1 });
-postSchema.index({ tags: 1 });
 
 /**
  * Đánh chỉ mục cho trường props.k và props.v,
@@ -29,7 +28,7 @@ postSchema.index({ "props.k": 1, "props.v": -1 });
  */
 postSchema.index({
     title: "text",
-    content: "text"
+    description: "text"
 });
 
 module.exports = postSchema;

@@ -1,13 +1,8 @@
 ::
-var _head_all_, _script_all_;
-
 if(!$spa()){
-_head_all_ = this.$headall || hook("head.all");
-_script_all_ = this.$scriptall || hook("script.all");
-
-this.$head = this.$head || hook(this._template_ + ".head");
-this.$script = this.$script || hook(this._template_ + ".script");
-};
+this.$head = hook(this._template_ + ".head");
+this.$script = hook(this._template_ + ".script");
+}
 ::
 
 <!DOCTYPE html>
@@ -17,11 +12,10 @@ this.$script = this.$script || hook(this._template_ + ".script");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    :: this.$meta || data(this._template_ + ".meta") ::
     :: if(this.$title) $.push("<title>", this.$title, "</title>"); ::
-    :: _head_all_ ::
-    <link rel="stylesheet" href="/public/::this._template_::.css">
+    :: this.$meta || data(this._template_ + ".meta") ::
     :: this.$head ::
+    <link rel="stylesheet" href="/public/::this._template_::.css">
     <style>
         .empty:empty {
             display: none;
@@ -38,11 +32,10 @@ this.$script = this.$script || hook(this._template_ + ".script");
             <div id="footer" class="empty">:: this.$footer ::</div>
         </div>
     </div>
+    :: this.$script ::
     <script src="/lang/vi"></script>
     <script src="/public/yavi.js"></script>
-    :: _script_all_ ::
     <script src="/public/::this._template_::.js"></script>
-    :: this.$script ::
     <script>if (window.load_page) load_page(document.location);</script>
 </body>
 

@@ -13,22 +13,26 @@ module.exports = function get_admin_theme_list(req) {
 
         let type = Type[req.params[0]],
             plugindir = [Plugin.dir, type, ""].join("/"),
-            name = Plugin.info.get(type),
-            plugins = [];
+            $name = Plugin.info.get(type),
+            data = {
+                type: "theme",
+                count: { all: 0, active: 0, deactive: 0 },
+                list: []
+            };
 
-        if (!fs.existsSync(plugindir)) return success(plugins);
+        if (!fs.existsSync(plugindir)) return success(data);
 
-        loop(fs.readdirSync(plugindir), function (plugin_name) {
-            let info = Plugin.json(plugindir + plugin_name + "/info.json");
+        loop(fs.readdirSync(plugindir), function (name) {
+            let info = Plugin.json(plugindir + name + "/info.json");
 
             info.type = type;
-            info.name = plugin_name;
-            info.active = name === info.name;
-            info.screenshot = ["/public", type, plugin_name, "image/screenshot.jpg"].join("/");
+            info.name = name;
+            info.active = $name === info.name;
+            info.screenshot = ["/public", type, name, "image/screenshot.jpg"].join("/");
 
-            info.active ? plugins.unshift(info) : plugins.push(info);
+            info.active ? data.list.unshift(info) : data.list.push(info);
         });
 
-        success(plugins);
+        success(data);
     });
 };

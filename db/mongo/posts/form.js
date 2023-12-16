@@ -3,6 +3,7 @@ module.exports = class FormPost {
 
     props = [];
     files = [];
+    count = { rating: 0, view: 0, file: 0, comment: 0 };
 
     constructor(data) {
         if (typeof data === "object") Object.assign(this, data);
@@ -18,7 +19,7 @@ module.exports = class FormPost {
         this.add("updated", date);
         this.add("created", date);
 
-        if (this.files.length) this.add("files_count", this.files.length);
+        this.count.file = this.files.length;
 
         return this;
     }

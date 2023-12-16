@@ -1,29 +1,18 @@
-### Lấy danh sách bài viết
-GET http://localhost/api/posts
-
-### Lấy bài viết chi tiết
-GET http://localhost/api/post
-
-### Tìm kiếm bài viết
-GET http://localhost/api/post-search
-Content-Type: application/json
-
 ### Thêm bài viết mới
-PUT http://localhost/api/post-new
+PUT http://localhost/api/meta-new
 Content-Type: application/json
 Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTc2ZTc1NzQyYThlM2MyYTczMzQ5OWMiLCJwdWJsaWMiOnsiZnVsbG5hbWUiOiJUaOG6vyBUw6JuIiwiY3JlYXRlZEF0IjoiMjAyMy0xMi0xMVQxMDo0MToyNi42MTdaIiwicm9sZSI6InVzZXIifSwic2V0dGluZyI6W10sImlhdCI6MTcwMjMxNTk1OX0.O21aV_uVk3tOcrBxBLK36gZcQZFNXKK6wWSfVdr-uWo;
 X-Yavi-Type: json
 
 {
-    "title": "Thám Tử Lừng Danh Conan",
-    "description": "Mo ta ba viet",
-    "content": "Vụ Án Tại Nhà Hàng Trung Hoa",
-    "tags": [],
-    "type": "html"
+    "collection": "yavi_posts",
+    "type": "category",
+    "key": "may-giat",
+    "title": "Máy giặt"
 }
 
 ### Chỉnh sửa bài viết
-POST http://localhost/api/post-edit
+POST http://localhost/api/meta-edit
 Content-Type: application/json
 
 {

@@ -6,6 +6,7 @@ const comment = require('./comment');
 const plugin = require('./plugin');
 
 const checkToken = require("yavi/cms/mw/check-token");
+const meta = require('./meta');
 
 module.exports = function (app) {
 
@@ -18,6 +19,8 @@ module.exports = function (app) {
      * API cho ( plugin/theme/admin )
      */
     plugin(app);
+
+    meta(app);
 
     user_props(app);
     post_props(app);

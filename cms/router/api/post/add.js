@@ -1,9 +1,17 @@
 const Post = require('yavi/db/mongo/posts');
+const Form = require("yavi/db/mongo/posts/form");
 
 /**
  * Thêm bài viết mới
  */
 module.exports = function (req) {
-    req.body.user = "656614e6674e555be1a0a2ba";
-    return Post.Add(req.body);
+
+    var form, post;
+
+    form = new Form(req.body);
+    form.user = req.User._id;
+
+    post = new Post(form.data);
+
+    console.log(post);
 }
